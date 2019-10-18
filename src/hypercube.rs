@@ -1,11 +1,11 @@
 use crate::directed_bijectional_connection_graph::{
-    DirectedBijectionalConnectionGraph, DirectedBijectionalConnectionGraphFunctions,
+    DirectedBijectiveConnectionGraph, DirectedBijectionalConnectionGraphFunctions,
 };
 use crate::{Dims, Node};
 use std::ops::BitXor;
 
-impl DirectedBijectionalConnectionGraph<HypercubeFunctions> {
-    pub fn new_hypercube(n: Dims) -> DirectedBijectionalConnectionGraph<HypercubeFunctions> {
+impl DirectedBijectiveConnectionGraph<HypercubeFunctions> {
+    pub fn new_hypercube(n: Dims) -> DirectedBijectiveConnectionGraph<HypercubeFunctions> {
         Self::new(n, HypercubeFunctions {})
     }
 }

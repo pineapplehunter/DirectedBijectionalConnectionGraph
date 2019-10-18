@@ -2,7 +2,7 @@ use crate::node_path::NodePath;
 use crate::{Dims, Node};
 use std::ops::BitXor;
 
-pub struct DirectedBijectionalConnectionGraph<F: DirectedBijectionalConnectionGraphFunctions> {
+pub struct DirectedBijectiveConnectionGraph<F: DirectedBijectionalConnectionGraphFunctions> {
     dimension: Dims,
     functions: F,
 }
@@ -26,7 +26,7 @@ pub trait DirectedBijectionalConnectionGraphFunctions {
     }
 }
 
-impl<F> DirectedBijectionalConnectionGraph<F>
+impl<F> DirectedBijectiveConnectionGraph<F>
 where
     F: DirectedBijectionalConnectionGraphFunctions,
 {
@@ -34,7 +34,7 @@ where
         assert_ne!(n_dim, 0);
         assert!(n_dim < 64);
 
-        DirectedBijectionalConnectionGraph {
+        DirectedBijectiveConnectionGraph {
             dimension: n_dim,
             functions,
         }

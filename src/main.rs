@@ -1,6 +1,6 @@
 use directed_bijectional_connection_graph::directed_bijectional_connection_graph::DirectedBijectionalConnectionGraphFunctions as GraphFunctions;
 use directed_bijectional_connection_graph::{
-    Dims, DirectedBijectionalConnectionGraph as Graph, Node,
+    Dims, DirectedBijectiveConnectionGraph as Graph, Node,
 };
 use std::ops::BitXor;
 
