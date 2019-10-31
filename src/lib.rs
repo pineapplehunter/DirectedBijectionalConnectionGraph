@@ -1,8 +1,10 @@
-pub mod directed_bijectional_connection_graph;
+mod directed_bijective_connection_graph;
+
+pub use directed_bijective_connection_graph::{
+    functions::DirectedBijectiveConnectionGraphFunctions, DirectedBijectiveConnectionGraph,
+};
 pub mod hypercube;
 pub mod node_path;
-
-pub use directed_bijectional_connection_graph::DirectedBijectiveConnectionGraph;
 
 pub type Node = u64;
 pub type Dims = u64;

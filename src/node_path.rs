@@ -1,8 +1,8 @@
 use crate::{Dims, Node};
 use std::collections::VecDeque;
-use std::fmt::{Display, Error, Formatter};
+use std::fmt::{Debug, Display, Error, Formatter};
 
-#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct NodePath {
     dimensions: Dims,
     path: VecDeque<Node>,
@@ -17,6 +17,13 @@ impl NodePath {
         }
     }
 
+    pub fn from_vec(n: Dims, src: Vec<Node>) -> Self {
+        Self {
+            dimensions: n,
+            path: src.into(),
+        }
+    }
+
     #[inline(always)]
     pub fn push_back(&mut self, n: Node) {
         self.path.push_back(n);
@@ -26,9 +33,17 @@ impl NodePath {
     pub fn push_front(&mut self, n: Node) {
         self.path.push_front(n);
     }
+
+    pub fn inner_path(&self) -> &VecDeque<Node> {
+        &self.path
+    }
+
+    pub fn inner_path_mut(&mut self) -> &mut VecDeque<Node> {
+        &mut self.path
+    }
 }
 
-impl Display for NodePath {
+impl Debug for NodePath {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         let mut s = String::new();
         if self.path.len() != 0 {
