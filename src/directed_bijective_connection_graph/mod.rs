@@ -1,11 +1,7 @@
-use crate::node_path::NodePath;
-use crate::{Dims, Node};
-use std::marker::PhantomData;
-use std::mem;
-use std::ops::BitXor;
-
 pub mod functions;
+use crate::Dims;
 use functions::DirectedBijectiveConnectionGraphFunctions;
+use std::marker::PhantomData;
 
 mod lemma1;
 mod lemma2;

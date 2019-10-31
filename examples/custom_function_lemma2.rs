@@ -4,13 +4,15 @@ use directed_bijectional_connection_graph::{
 use std::ops::BitXor;
 
 fn main() {
-    let s = 0b00000000;
-    let n = 8;
+    let graph = DirectedBijectiveConnectionGraph::<Functions>::new(8);
 
-    let graph = DirectedBijectiveConnectionGraph::<Functions>::new(n);
+    let src = 0b00110011;
+    let dst = 0b10101010;
 
-    let path = graph.lemma1(n, s);
-    println!("{:#?}", path);
+    let path = graph.lemma2(src, dst);
+
+    println!("path from {:08b} to {:08b} in a hyper cube.", src, dst);
+    println!("{:?}", path);
 }
 
 struct Functions;

@@ -8,6 +8,6 @@ fn main() {
 
     let path = graph.lemma2(src, dst);
 
-    println!("path from {:08b} to {:08b} in a hyper cube.", src,dst);
+    println!("path from {:08b} to {:08b} in a hyper cube.", src, dst);
     println!("{:?}", path);
 }

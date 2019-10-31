@@ -1,6 +1,6 @@
 use crate::{Dims, Node};
 use std::collections::VecDeque;
-use std::fmt::{Debug, Display, Error, Formatter};
+use std::fmt::{Debug, Error, Formatter};
 
 #[derive(PartialEq)]
 pub struct NodePath {
@@ -46,7 +46,7 @@ impl NodePath {
 impl Debug for NodePath {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         let mut s = String::new();
-        if self.path.len() != 0 {
+        if !self.path.is_empty() {
             s.push_str(&format!(
                 "{:0dim$b}",
                 self.path[0],

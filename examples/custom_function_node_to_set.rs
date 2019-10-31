@@ -4,13 +4,20 @@ use directed_bijectional_connection_graph::{
 use std::ops::BitXor;
 
 fn main() {
-    let s = 0b00000000;
-    let n = 8;
+    let dim = 8;
 
-    let graph = DirectedBijectiveConnectionGraph::<Functions>::new(n);
+    let graph = DirectedBijectiveConnectionGraph::<Functions>::new(dim);
 
-    let path = graph.lemma1(n, s);
-    println!("{:#?}", path);
+    let s = 0b01010101;
+    let mut d = vec![];
+
+    for i in 0..8 {
+        d.push(1 << i);
+    }
+
+    let paths = graph.node_to_set(s, &d);
+
+    println!("{:#?}", paths);
 }
 
 struct Functions;
