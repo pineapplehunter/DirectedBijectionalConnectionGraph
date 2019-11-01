@@ -64,3 +64,28 @@ where
         paths
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::node_path::NodePath;
+    use crate::DirectedBijectiveConnectionGraph;
+
+    #[test]
+    fn node_to_set() {
+        let graph = DirectedBijectiveConnectionGraph::new_hypercube(4);
+
+        let s = 0b0000;
+        let d = 0b1111;
+
+        let paths = graph.node_to_node(s, d);
+
+        let expected_paths: Vec<NodePath> = vec![
+            NodePath::from_vec(4, vec![0b0000, 0b0100, 0b0110, 0b0111, 0b1111]),
+            NodePath::from_vec(4, vec![0b0000, 0b0001, 0b0101, 0b1101, 0b1111]),
+            NodePath::from_vec(4, vec![0b0000, 0b0010, 0b0011, 0b1011, 0b1111]),
+            NodePath::from_vec(4, vec![0b0000, 0b1000, 0b1100, 0b1110, 0b1111]),
+        ];
+
+        assert_eq!(paths, expected_paths);
+    }
+}
