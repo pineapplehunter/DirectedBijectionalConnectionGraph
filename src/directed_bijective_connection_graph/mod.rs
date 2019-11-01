@@ -20,7 +20,7 @@ where
 {
     pub fn new(n_dim: Dims) -> Self {
         debug_assert_ne!(n_dim, 0);
-        debug_assert!(n_dim < 64);
+        debug_assert!(n_dim <= 64);
 
         DirectedBijectiveConnectionGraph {
             dimension: n_dim,

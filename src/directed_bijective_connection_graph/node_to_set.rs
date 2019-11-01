@@ -6,6 +6,12 @@ impl<F> DirectedBijectiveConnectionGraph<F>
 where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
+    #[allow(non_snake_case)]
+    #[inline(always)]
+    pub fn N2S(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
+        self.node_to_set(s, d)
+    }
+
     pub fn node_to_set(&self, src: Node, d: &[Node]) -> Vec<NodePath> {
         assert!(d.len() <= self.dimension as usize);
         assert_ne!(d.len(), 0);

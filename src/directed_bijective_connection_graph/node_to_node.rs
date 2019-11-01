@@ -7,6 +7,13 @@ impl<F> DirectedBijectiveConnectionGraph<F>
 where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
+    #[allow(non_snake_case)]
+    #[inline(always)]
+    pub fn N2N(&self, s: Node, d: Node) -> Vec<NodePath> {
+        self.node_to_node(s, d)
+    }
+
+    #[inline(always)]
     pub fn node_to_node(&self, s: Node, d: Node) -> Vec<NodePath> {
         self.node_to_node_helper(self.dimension, s, d)
     }
