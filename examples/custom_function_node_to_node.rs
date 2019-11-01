@@ -8,8 +8,8 @@ fn main() {
 
     let graph = DirectedBijectiveConnectionGraph::<Functions>::new(dim);
 
-    let s = 0b01010101;
-    let d = 0b00001111;
+    let s = 0b0101_0101;
+    let d = 0b0000_1111;
 
     let paths = graph.node_to_node(s, d);
 

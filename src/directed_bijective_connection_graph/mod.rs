@@ -18,12 +18,12 @@ impl<F> DirectedBijectiveConnectionGraph<F>
 where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
-    pub fn new(n_dim: Dims) -> Self {
-        debug_assert_ne!(n_dim, 0);
-        debug_assert!(n_dim <= 64);
+    pub fn new(n: Dims) -> Self {
+        debug_assert_ne!(n, 0);
+        debug_assert!(n <= 64);
 
         DirectedBijectiveConnectionGraph {
-            dimension: n_dim,
+            dimension: n,
             functions: PhantomData,
         }
     }

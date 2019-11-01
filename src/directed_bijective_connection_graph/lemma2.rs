@@ -9,45 +9,45 @@ where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
     #[inline(always)]
-    pub fn lemma2(&self, s_source: Node, d_dest: Node) -> NodePath {
-        self.R(s_source, d_dest)
+    pub fn lemma2(&self, s: Node, d: Node) -> NodePath {
+        self.R(s, d)
     }
 
     #[allow(non_snake_case)]
-    pub fn R(&self, s_source: Node, d_dest: Node) -> NodePath {
+    pub fn R(&self, s: Node, d: Node) -> NodePath {
         let mut path = NodePath::new(self.dimension);
-        path.push_back(s_source);
+        path.push_back(s);
 
-        self.R_helper(self.dimension, s_source, d_dest, &mut path);
+        self.R_helper(self.dimension, s, d, &mut path);
 
         path
     }
 
     #[allow(non_snake_case)]
-    pub(crate) fn R_helper(&self, n_dim: Dims, s_source: Node, d_dest: Node, path: &mut NodePath) {
+    pub(crate) fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut NodePath) {
         // if same: do nothing
-        if s_source == d_dest {
+        if s == d {
             return;
         }
 
         // Step 1
-        if n_dim == 1 {
-            path.push_back(s_source.bitxor(1));
+        if n == 1 {
+            path.push_back(s.bitxor(1));
             return;
         }
 
         // Step 2
-        let mask = 1 << (n_dim - 1);
-        if s_source & mask == d_dest & mask {
-            self.R_helper(n_dim - 1, s_source, d_dest, path);
+        let mask = 1 << (n - 1);
+        if s & mask == d & mask {
+            self.R_helper(n - 1, s, d, path);
             return;
         }
 
         // Step 3
         let phi_s;
-        phi_s = F::phi(n_dim, s_source);
+        phi_s = F::phi(n, s);
         path.push_back(phi_s);
-        self.R_helper(n_dim - 1, phi_s, d_dest, path);
+        self.R_helper(n - 1, phi_s, d, path);
     }
 }
 

@@ -12,21 +12,21 @@ where
         self.node_to_set(s, d)
     }
 
-    pub fn node_to_set(&self, src: Node, d: &[Node]) -> Vec<NodePath> {
+    pub fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
         assert!(d.len() <= self.dimension as usize);
         assert_ne!(d.len(), 0);
 
         //dbg!(&d);
 
         if d.len() == 1 {
-            if d[0] == src {
+            if d[0] == s {
                 let mut tmp = NodePath::new(self.dimension);
-                tmp.push_back(src);
+                tmp.push_back(s);
                 return vec![tmp];
             } else {
                 let mut tmp = NodePath::new(self.dimension);
-                tmp.push_back(src);
-                tmp.push_back(src.bitxor(1));
+                tmp.push_back(s);
+                tmp.push_back(s.bitxor(1));
                 return vec![tmp];
             }
         }
@@ -39,9 +39,9 @@ where
         let all_on_same_side_as_src = d
             .iter()
             .map(|node| *node & mask)
-            .all(|node_masked| node_masked == src & mask);
+            .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
-            paths = self.node_to_set(src, &d[..dim as usize - 1]);
+            paths = self.node_to_set(s, &d[..dim as usize - 1]);
             paths.push(NodePath::new(self.dimension));
 
             debug_assert_eq!(paths.len(), dim as usize);
@@ -61,17 +61,17 @@ where
                 }
             }
 
-            let phi_s = F::phi(dim, src);
+            let phi_s = F::phi(dim, s);
             let psi_d = F::psi(dim, d[working_index]);
 
             let last_path = &mut paths[working_index];
-            last_path.push_back(src);
+            last_path.push_back(s);
             self.R_helper(dim, phi_s, psi_d, last_path);
             last_path.push_back(d[working_index]);
         } else {
             let mut same_ds = d
                 .iter()
-                .filter(|&node| node & mask == src & mask)
+                .filter(|&node| node & mask == s & mask)
                 .copied()
                 .collect::<Vec<u64>>();
 
@@ -79,7 +79,7 @@ where
             let mut tmp_paths = vec![];
 
             for &n in d {
-                if n & mask == src & mask {
+                if n & mask == s & mask {
                     new_d.push(n);
                     tmp_paths.push(NodePath::new(self.dimension));
                 } else {
@@ -121,13 +121,13 @@ where
 
             let mut working_index = d
                 .iter()
-                .position(|&node| node & mask != src & mask)
+                .position(|&node| node & mask != s & mask)
                 .unwrap();
             let dn = d[working_index];
 
             let mut path = NodePath::new(self.dimension);
-            let phi_s = F::phi(dim, src);
-            path.push_back(src);
+            let phi_s = F::phi(dim, s);
+            path.push_back(s);
             path.push_back(phi_s);
             self.R_helper(dim, phi_s, dn, &mut path);
 
@@ -152,7 +152,7 @@ where
             tmp_paths[working_index] = NodePath::new(self.dimension);
 
             new_d.swap(working_index, dim as usize - 1);
-            let mut partial_paths = self.node_to_set(src, &new_d[..dim as usize - 1]);
+            let mut partial_paths = self.node_to_set(s, &new_d[..dim as usize - 1]);
             partial_paths.push(path);
             partial_paths.swap(working_index, dim as usize - 1);
 

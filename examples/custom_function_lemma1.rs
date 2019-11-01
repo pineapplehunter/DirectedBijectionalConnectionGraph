@@ -4,7 +4,7 @@ use directed_bijectional_connection_graph::{
 use std::ops::BitXor;
 
 fn main() {
-    let s = 0b00000000;
+    let s = 0b0000_0000;
     let n = 8;
 
     let graph = DirectedBijectiveConnectionGraph::<Functions>::new(n);

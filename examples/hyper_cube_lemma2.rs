@@ -3,11 +3,11 @@ use directed_bijectional_connection_graph::DirectedBijectiveConnectionGraph;
 fn main() {
     let graph = DirectedBijectiveConnectionGraph::new_hypercube(8);
 
-    let src = 0b00110011;
-    let dst = 0b10101010;
+    let s = 0b0011_0011;
+    let d = 0b1010_1010;
 
-    let path = graph.lemma2(src, dst);
+    let path = graph.lemma2(s, d);
 
-    println!("path from {:08b} to {:08b} in a hyper cube.", src, dst);
+    println!("path from {:08b} to {:08b} in a hyper cube.", s, d);
     println!("{:?}", path);
 }
