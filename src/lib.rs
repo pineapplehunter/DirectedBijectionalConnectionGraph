@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 mod directed_bijective_connection_graph;
 
 pub use directed_bijective_connection_graph::{
