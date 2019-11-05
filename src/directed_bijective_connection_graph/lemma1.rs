@@ -34,13 +34,13 @@ where
 
 #[cfg(test)]
 mod test {
-    use crate::graphs::HypercubeGraph;
+    use crate::graphs::HyperCube;
     use crate::node_path::NodePath;
     use crate::Lemma1;
 
     #[test]
     fn lemma1() {
-        let graph = HypercubeGraph::new(4);
+        let graph = HyperCube::new(4);
         let paths = graph.lemma1(4, 0b0011);
 
         let expected_paths: Vec<NodePath> = vec![

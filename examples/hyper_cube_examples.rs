@@ -1,5 +1,5 @@
+use directed_bijectional_connection_graph::graphs::HyperCube;
 use directed_bijectional_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
-use directed_bijectional_connection_graph::graphs::HypercubeGraph;
 
 fn main() {
     example_lemma1();
@@ -16,7 +16,7 @@ fn example_lemma1() {
     let n = 8;
     let s = 0b0000_0001;
 
-    let graph = HypercubeGraph::new(n);
+    let graph = HyperCube::new(n);
 
     let path = graph.lemma1(n, s);
 
@@ -29,7 +29,7 @@ fn example_lemma2() {
     let s = 0b0011_0011;
     let d = 0b1010_1010;
 
-    let graph = HypercubeGraph::new(n);
+    let graph = HyperCube::new(n);
 
     let path = graph.lemma2(s, d);
 
@@ -46,7 +46,7 @@ fn example_node_to_set() {
         d.push(1 << i);
     }
 
-    let graph = HypercubeGraph::new(n);
+    let graph = HyperCube::new(n);
 
     let paths = graph.node_to_set(s, &d);
 
@@ -59,7 +59,7 @@ fn example_node_to_node() {
     let s = 0b0101_0101;
     let d = 0b0000_1111;
 
-    let graph = HypercubeGraph::new(n);
+    let graph = HyperCube::new(n);
 
     let paths = graph.node_to_node(s, d);
 

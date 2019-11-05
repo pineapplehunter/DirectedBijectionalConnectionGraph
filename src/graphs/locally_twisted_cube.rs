@@ -14,7 +14,7 @@ impl DirectedBijectiveConnectionGraphFunctions for LocallyTwistedCube {
         if n < 3 {
             node.bitxor(1 << (n - 1))
         } else {
-            node.bitxor((0b10 | (node & 1)) << (n-2))
+            node.bitxor((0b10 | (node & 1)) << (n - 2))
         }
     }
 

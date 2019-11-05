@@ -82,13 +82,13 @@ where
 
 #[cfg(test)]
 mod test {
-    use crate::graphs::HypercubeGraph;
+    use crate::graphs::HyperCube;
     use crate::node_path::NodePath;
     use crate::NodeToNode;
 
     #[test]
     fn node_to_set() {
-        let graph = HypercubeGraph::new(4);
+        let graph = HyperCube::new(4);
 
         let s = 0b0000;
         let d = 0b1111;

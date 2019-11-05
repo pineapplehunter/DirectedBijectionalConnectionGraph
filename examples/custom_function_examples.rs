@@ -1,4 +1,6 @@
-use directed_bijectional_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet, Dims, DirectedBijectiveConnectionGraphFunctions, Node};
+use directed_bijectional_connection_graph::{
+    Dims, DirectedBijectiveConnectionGraphFunctions, Lemma1, Lemma2, Node, NodeToNode, NodeToSet,
+};
 use std::ops::BitXor;
 
 fn main() {
