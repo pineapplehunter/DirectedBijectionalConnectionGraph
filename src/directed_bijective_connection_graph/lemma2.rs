@@ -71,7 +71,13 @@ mod test {
 
         let expected_path = NodePath::from_vec(
             8,
-            vec![0b0011_0011, 0b1011_0011, 0b1010_0011, 0b1010_1011, 0b1010_1010],
+            vec![
+                0b0011_0011,
+                0b1011_0011,
+                0b1010_0011,
+                0b1010_1011,
+                0b1010_1010,
+            ],
         );
 
         assert_eq!(path, expected_path);
