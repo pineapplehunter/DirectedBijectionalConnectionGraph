@@ -1,15 +1,15 @@
 #![feature(test)]
 
 extern crate test;
-use directed_bijectional_connection_graph::graphs::HypercubeGraph;
+use directed_bijectional_connection_graph::graphs::LocallyTwistedCube;
 use directed_bijectional_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
 use test::Bencher;
 
 #[bench]
-fn hyper_cube_lemma1_64bit(b: &mut Bencher) {
+fn ltq_lemma1_64bit(b: &mut Bencher) {
     let dim = 64;
 
-    let graph = HypercubeGraph::new(dim);
+    let graph = LocallyTwistedCube::new(dim);
 
     let d = 0x0000_0000_0000_0000;
 
@@ -17,10 +17,10 @@ fn hyper_cube_lemma1_64bit(b: &mut Bencher) {
 }
 
 #[bench]
-fn hyper_cube_lemma2_64bit(b: &mut Bencher) {
+fn ltq_lemma2_64bit(b: &mut Bencher) {
     let dim = 64;
 
-    let graph = HypercubeGraph::new(dim);
+    let graph = LocallyTwistedCube::new(dim);
 
     let s = 0x0000_0000_0000_0000;
     let d = 0xffff_ffff_ffff_ffff;
@@ -29,10 +29,10 @@ fn hyper_cube_lemma2_64bit(b: &mut Bencher) {
 }
 
 #[bench]
-fn hyper_cube_node_to_set_64bit(b: &mut Bencher) {
+fn ltq_node_to_set_64bit(b: &mut Bencher) {
     let dim = 64;
 
-    let graph = HypercubeGraph::new(dim);
+    let graph = LocallyTwistedCube::new(dim);
 
     let s = 0x0000_0000_0000_0000;
     let mut d = vec![];
@@ -45,10 +45,10 @@ fn hyper_cube_node_to_set_64bit(b: &mut Bencher) {
 }
 
 #[bench]
-fn hyper_cube_node_to_node_64bit(b: &mut Bencher) {
+fn ltq_node_to_node_64bit(b: &mut Bencher) {
     let dim = 64;
 
-    let graph = HypercubeGraph::new(dim);
+    let graph = LocallyTwistedCube::new(dim);
 
     let s = 0x0000_0000_0000_0000;
     let d = 0xffff_ffff_ffff_ffff;

@@ -34,7 +34,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use crate::hypercube::HypercubeGraph;
+    use crate::graphs::HypercubeGraph;
     use crate::node_path::NodePath;
     use crate::Lemma1;
 

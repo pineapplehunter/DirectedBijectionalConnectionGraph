@@ -1,4 +1,4 @@
-use directed_bijectional_connection_graph::hypercube::HypercubeGraph;
+use directed_bijectional_connection_graph::graphs::HypercubeGraph;
 use directed_bijectional_connection_graph::Lemma2;
 
 fn main() {
