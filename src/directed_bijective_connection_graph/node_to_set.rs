@@ -1,30 +1,37 @@
+use crate::directed_bijective_connection_graph::lemma2::Lemma2;
 use crate::node_path::NodePath;
-use crate::{DirectedBijectiveConnectionGraph, DirectedBijectiveConnectionGraphFunctions, Node};
+use crate::{DirectedBijectiveConnectionGraphFunctions, Node};
 use std::ops::BitXor;
 
-impl<F> DirectedBijectiveConnectionGraph<F>
+pub trait NodeToSet {
+    #[allow(non_snake_case)]
+    fn N2S(&self, s: Node, d: &[Node]) -> Vec<NodePath>;
+    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<NodePath>;
+}
+
+impl<F> NodeToSet for F
 where
-    F: DirectedBijectiveConnectionGraphFunctions,
+    F: DirectedBijectiveConnectionGraphFunctions + Lemma2,
 {
     #[allow(non_snake_case)]
     #[inline(always)]
-    pub fn N2S(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
+    fn N2S(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
         self.node_to_set(s, d)
     }
 
-    pub fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
-        assert!(d.len() <= self.dimension as usize);
+    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<NodePath> {
+        assert!(d.len() <= self.dimension() as usize);
         assert_ne!(d.len(), 0);
 
         //dbg!(&d);
 
         if d.len() == 1 {
             if d[0] == s {
-                let mut tmp = NodePath::new(self.dimension);
+                let mut tmp = NodePath::new(self.dimension());
                 tmp.push_back(s);
                 return vec![tmp];
             } else {
-                let mut tmp = NodePath::new(self.dimension);
+                let mut tmp = NodePath::new(self.dimension());
                 tmp.push_back(s);
                 tmp.push_back(s.bitxor(1));
                 return vec![tmp];
@@ -42,7 +49,7 @@ where
             .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
             paths = self.node_to_set(s, &d[..dim as usize - 1]);
-            paths.push(NodePath::new(self.dimension));
+            paths.push(NodePath::new(self.dimension()));
 
             debug_assert_eq!(paths.len(), dim as usize);
 
@@ -61,8 +68,8 @@ where
                 }
             }
 
-            let phi_s = F::phi(dim, s);
-            let psi_d = F::psi(dim, d[working_index]);
+            let phi_s = self.phi(dim, s);
+            let psi_d = self.psi(dim, d[working_index]);
 
             let last_path = &mut paths[working_index];
             last_path.push_back(s);
@@ -81,27 +88,27 @@ where
             for &n in d {
                 if n & mask == s & mask {
                     new_d.push(n);
-                    tmp_paths.push(NodePath::new(self.dimension));
+                    tmp_paths.push(NodePath::new(self.dimension()));
                 } else {
-                    let dd = F::psi(dim, n);
+                    let dd = self.psi(dim, n);
                     if !same_ds.contains(&&dd) {
                         same_ds.push(dd);
 
                         new_d.push(dd);
                         tmp_paths.push({
-                            let mut path = NodePath::new(self.dimension);
+                            let mut path = NodePath::new(self.dimension());
                             path.push_back(n);
                             path
                         });
                     } else {
                         for i in (1..dim).rev() {
-                            let dd = F::psi(i, n);
-                            let ddd = F::psi(dim, dd);
+                            let dd = self.psi(i, n);
+                            let ddd = self.psi(dim, dd);
 
                             if !same_ds.contains(&&ddd) {
                                 new_d.push(ddd);
                                 tmp_paths.push({
-                                    let mut path = NodePath::new(self.dimension);
+                                    let mut path = NodePath::new(self.dimension());
                                     path.push_back(dd);
                                     path.push_back(n);
                                     path
@@ -119,14 +126,11 @@ where
             //dbg!(&new_d);
             //dbg!(&tmp_paths);
 
-            let mut working_index = d
-                .iter()
-                .position(|&node| node & mask != s & mask)
-                .unwrap();
+            let mut working_index = d.iter().position(|&node| node & mask != s & mask).unwrap();
             let dn = d[working_index];
 
-            let mut path = NodePath::new(self.dimension);
-            let phi_s = F::phi(dim, s);
+            let mut path = NodePath::new(self.dimension());
+            let phi_s = self.phi(dim, s);
             path.push_back(s);
             path.push_back(phi_s);
             self.R_helper(dim, phi_s, dn, &mut path);
@@ -149,7 +153,7 @@ where
                 }
             }
 
-            tmp_paths[working_index] = NodePath::new(self.dimension);
+            tmp_paths[working_index] = NodePath::new(self.dimension());
 
             new_d.swap(working_index, dim as usize - 1);
             let mut partial_paths = self.node_to_set(s, &new_d[..dim as usize - 1]);
@@ -176,12 +180,13 @@ where
 
 #[cfg(test)]
 mod test {
+    use crate::hypercube::HypercubeGraph;
     use crate::node_path::NodePath;
-    use crate::DirectedBijectiveConnectionGraph;
+    use crate::NodeToSet;
 
     #[test]
     fn node_to_set() {
-        let graph = DirectedBijectiveConnectionGraph::new_hypercube(4);
+        let graph = HypercubeGraph::new(4);
 
         let s = 0b0000;
         let d = [0b0001, 0b0011, 0b0111, 0b1111];

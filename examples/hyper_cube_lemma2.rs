@@ -1,13 +1,14 @@
-use directed_bijectional_connection_graph::DirectedBijectiveConnectionGraph;
+use directed_bijectional_connection_graph::hypercube::HypercubeGraph;
+use directed_bijectional_connection_graph::Lemma2;
 
 fn main() {
-    let graph = DirectedBijectiveConnectionGraph::new_hypercube(8);
-
+    let n = 8;
     let s = 0b0011_0011;
     let d = 0b1010_1010;
 
+    let graph = HypercubeGraph::new(n);
+
     let path = graph.lemma2(s, d);
 
-    println!("path from {:08b} to {:08b} in a hyper cube.", s, d);
     println!("{:?}", path);
 }

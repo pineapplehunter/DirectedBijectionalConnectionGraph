@@ -1,24 +1,32 @@
+use crate::directed_bijective_connection_graph::lemma1::Lemma1;
+use crate::directed_bijective_connection_graph::lemma2::Lemma2;
+use crate::directed_bijective_connection_graph::node_to_set::NodeToSet;
 use crate::node_path::NodePath;
-use crate::{
-    Dims, DirectedBijectiveConnectionGraph, DirectedBijectiveConnectionGraphFunctions, Node,
-};
+use crate::{Dims, DirectedBijectiveConnectionGraphFunctions, Node};
 
-impl<F> DirectedBijectiveConnectionGraph<F>
+pub trait NodeToNode {
+    #[allow(non_snake_case)]
+    fn N2N(&self, s: Node, d: Node) -> Vec<NodePath>;
+    fn node_to_node(&self, s: Node, d: Node) -> Vec<NodePath>;
+    fn node_to_node_helper(&self, n: Dims, s: Node, d: Node) -> Vec<NodePath>;
+}
+
+impl<F> NodeToNode for F
 where
-    F: DirectedBijectiveConnectionGraphFunctions,
+    F: DirectedBijectiveConnectionGraphFunctions + Lemma2 + Lemma1 + NodeToSet,
 {
     #[allow(non_snake_case)]
     #[inline(always)]
-    pub fn N2N(&self, s: Node, d: Node) -> Vec<NodePath> {
+    fn N2N(&self, s: Node, d: Node) -> Vec<NodePath> {
         self.node_to_node(s, d)
     }
 
     #[inline(always)]
-    pub fn node_to_node(&self, s: Node, d: Node) -> Vec<NodePath> {
-        self.node_to_node_helper(self.dimension, s, d)
+    fn node_to_node(&self, s: Node, d: Node) -> Vec<NodePath> {
+        self.node_to_node_helper(self.dimension(), s, d)
     }
 
-    pub fn node_to_node_helper(&self, n: Dims, s: Node, d: Node) -> Vec<NodePath> {
+    fn node_to_node_helper(&self, n: Dims, s: Node, d: Node) -> Vec<NodePath> {
         let mut paths;
 
         let mask = 1 << (n - 1);
@@ -26,18 +34,18 @@ where
         if s & mask == d & mask {
             paths = self.node_to_node_helper(n - 1, s, d);
 
-            let mut path = NodePath::new(self.dimension);
+            let mut path = NodePath::new(self.dimension());
             path.push_back(s);
-            let phi_s = F::phi(n, s);
+            let phi_s = self.phi(n, s);
             path.push_back(phi_s);
-            self.R_helper(n, phi_s, F::psi(n, d), &mut path);
+            self.R_helper(n, phi_s, self.psi(n, d), &mut path);
             path.push_back(d);
 
             paths.push(path);
         } else {
-            let mut path = NodePath::new(self.dimension);
+            let mut path = NodePath::new(self.dimension());
             path.push_back(s);
-            let phi_s = F::phi(n, s);
+            let phi_s = self.phi(n, s);
             path.push_back(phi_s);
             self.R_helper(n, phi_s, d, &mut path);
 
@@ -74,12 +82,13 @@ where
 
 #[cfg(test)]
 mod test {
+    use crate::hypercube::HypercubeGraph;
     use crate::node_path::NodePath;
-    use crate::DirectedBijectiveConnectionGraph;
+    use crate::NodeToNode;
 
     #[test]
     fn node_to_set() {
-        let graph = DirectedBijectiveConnectionGraph::new_hypercube(4);
+        let graph = HypercubeGraph::new(4);
 
         let s = 0b0000;
         let d = 0b1111;

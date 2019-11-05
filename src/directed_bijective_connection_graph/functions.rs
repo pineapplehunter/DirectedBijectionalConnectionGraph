@@ -1,10 +1,12 @@
 use crate::{Dims, Node};
 
 pub trait DirectedBijectiveConnectionGraphFunctions {
-    fn phi(n: Dims, node: Node) -> Node;
+    fn phi(&self, n: Dims, node: Node) -> Node;
 
     #[inline(always)]
-    fn psi(n: Dims, node: Node) -> Node {
-        Self::phi(n, node)
+    fn psi(&self, n: Dims, node: Node) -> Node {
+        self.phi(n, node)
     }
+
+    fn dimension(&self) -> Dims;
 }

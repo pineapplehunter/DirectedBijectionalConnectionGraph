@@ -1,25 +1,27 @@
 use crate::node_path::NodePath;
-use crate::{
-    Dims, DirectedBijectiveConnectionGraph, DirectedBijectiveConnectionGraphFunctions, Node,
-};
+use crate::{Dims, DirectedBijectiveConnectionGraphFunctions, Node};
 
-impl<F> DirectedBijectiveConnectionGraph<F>
+pub trait Lemma1 {
+    fn lemma1(&self, n: Dims, d: Node) -> Vec<NodePath>;
+}
+
+impl<F> Lemma1 for F
 where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
-    pub fn lemma1(&self, n: Dims, d: Node) -> Vec<NodePath> {
+    fn lemma1(&self, n: Dims, d: Node) -> Vec<NodePath> {
         let mut paths = Vec::new();
 
-        let mut direct_path = NodePath::new(self.dimension);
+        let mut direct_path = NodePath::new(self.dimension());
         direct_path.push_front(d);
-        direct_path.push_front(F::psi(n, d));
+        direct_path.push_front(self.psi(n, d));
         paths.push(direct_path);
 
         for i in 1..n {
-            let mut p = NodePath::new(self.dimension);
+            let mut p = NodePath::new(self.dimension());
             p.push_front(d);
-            let dd = F::psi(i, d);
-            let ddd = F::psi(n, dd);
+            let dd = self.psi(i, d);
+            let ddd = self.psi(n, dd);
             p.push_front(dd);
             p.push_front(ddd);
 
@@ -32,12 +34,13 @@ where
 
 #[cfg(test)]
 mod test {
+    use crate::hypercube::HypercubeGraph;
     use crate::node_path::NodePath;
-    use crate::DirectedBijectiveConnectionGraph;
+    use crate::Lemma1;
 
     #[test]
     fn lemma1() {
-        let graph = DirectedBijectiveConnectionGraph::new_hypercube(4);
+        let graph = HypercubeGraph::new(4);
         let paths = graph.lemma1(4, 0b0011);
 
         let expected_paths: Vec<NodePath> = vec![

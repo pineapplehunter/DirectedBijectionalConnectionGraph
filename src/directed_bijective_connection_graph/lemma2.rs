@@ -1,30 +1,37 @@
 use crate::directed_bijective_connection_graph::functions::DirectedBijectiveConnectionGraphFunctions;
-use crate::directed_bijective_connection_graph::DirectedBijectiveConnectionGraph;
 use crate::node_path::NodePath;
 use crate::{Dims, Node};
 use std::ops::BitXor;
 
-impl<F> DirectedBijectiveConnectionGraph<F>
+pub trait Lemma2 {
+    fn lemma2(&self, s: Node, d: Node) -> NodePath;
+    #[allow(non_snake_case)]
+    fn R(&self, s: Node, d: Node) -> NodePath;
+    #[allow(non_snake_case)]
+    fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut NodePath);
+}
+
+impl<F> Lemma2 for F
 where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
     #[inline(always)]
-    pub fn lemma2(&self, s: Node, d: Node) -> NodePath {
+    fn lemma2(&self, s: Node, d: Node) -> NodePath {
         self.R(s, d)
     }
 
     #[allow(non_snake_case)]
-    pub fn R(&self, s: Node, d: Node) -> NodePath {
-        let mut path = NodePath::new(self.dimension);
+    fn R(&self, s: Node, d: Node) -> NodePath {
+        let mut path = NodePath::new(self.dimension());
         path.push_back(s);
 
-        self.R_helper(self.dimension, s, d, &mut path);
+        self.R_helper(self.dimension(), s, d, &mut path);
 
         path
     }
 
     #[allow(non_snake_case)]
-    pub(crate) fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut NodePath) {
+    fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut NodePath) {
         // if same: do nothing
         if s == d {
             return;
@@ -45,7 +52,7 @@ where
 
         // Step 3
         let phi_s;
-        phi_s = F::phi(n, s);
+        phi_s = self.phi(n, s);
         path.push_back(phi_s);
         self.R_helper(n - 1, phi_s, d, path);
     }
@@ -53,17 +60,18 @@ where
 
 #[cfg(test)]
 mod test {
+    use crate::hypercube::HypercubeGraph;
     use crate::node_path::NodePath;
-    use crate::DirectedBijectiveConnectionGraph;
+    use crate::Lemma2;
 
     #[test]
     fn lemma2() {
-        let graph = DirectedBijectiveConnectionGraph::new_hypercube(8);
-        let path = graph.lemma2(0b00110011, 0b10101010);
+        let graph = HypercubeGraph::new(8);
+        let path = graph.lemma2(0b0011_0011, 0b1010_1010);
 
         let expected_path = NodePath::from_vec(
             8,
-            vec![0b00110011, 0b10110011, 0b10100011, 0b10101011, 0b10101010],
+            vec![0b0011_0011, 0b1011_0011, 0b1010_0011, 0b1010_1011, 0b1010_1010],
         );
 
         assert_eq!(path, expected_path);
