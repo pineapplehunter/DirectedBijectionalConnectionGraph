@@ -1,7 +1,6 @@
 use directed_bijectional_connection_graph::{
     Dims, DirectedBijectiveConnectionGraphFunctions, Lemma1, Lemma2, Node, NodeToNode, NodeToSet,
 };
-use std::ops::BitXor;
 
 fn main() {
     example_lemma1();
@@ -80,22 +79,18 @@ impl DirectedBijectiveConnectionGraphFunctions for CustomFunctionGraph {
     fn phi(&self, n: Dims, node: Node) -> Node {
         let mask = 1 << (n - 1);
         if node & mask == 0 {
-            (1 << (n - 1)).bitxor(node)
+            (1 << (n - 1)) ^ (node)
         } else {
-            (u64::max_value() << (n))
-                .bitxor(u64::max_value())
-                .bitxor(node)
+            (u64::max_value() << (n)) ^ (u64::max_value()) ^ (node)
         }
     }
 
     fn psi(&self, n: Dims, node: Node) -> Node {
         let mask = 1 << (n - 1);
         if node & mask != 0 {
-            (1 << (n - 1)).bitxor(node)
+            (1 << (n - 1)) ^ (node)
         } else {
-            (u64::max_value() << (n))
-                .bitxor(u64::max_value())
-                .bitxor(node)
+            (u64::max_value() << (n)) ^ (u64::max_value()) ^ (node)
         }
     }
 

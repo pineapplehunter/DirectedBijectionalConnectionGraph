@@ -1,7 +1,6 @@
 use crate::directed_bijective_connection_graph::lemma2::Lemma2;
 use crate::node_path::NodePath;
 use crate::{DirectedBijectiveConnectionGraphFunctions, Node};
-use std::ops::BitXor;
 
 pub trait NodeToSet {
     #[allow(non_snake_case)]
@@ -33,7 +32,7 @@ where
             } else {
                 let mut tmp = NodePath::new(self.dimension());
                 tmp.push_back(s);
-                tmp.push_back(s.bitxor(1));
+                tmp.push_back(s ^ 1);
                 return vec![tmp];
             }
         }

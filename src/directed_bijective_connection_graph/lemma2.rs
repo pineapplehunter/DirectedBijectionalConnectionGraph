@@ -1,7 +1,6 @@
 use crate::directed_bijective_connection_graph::functions::DirectedBijectiveConnectionGraphFunctions;
 use crate::node_path::NodePath;
 use crate::{Dims, Node};
-use std::ops::BitXor;
 
 pub trait Lemma2 {
     fn lemma2(&self, s: Node, d: Node) -> NodePath;
@@ -39,7 +38,7 @@ where
 
         // Step 1
         if n == 1 {
-            path.push_back(s.bitxor(1));
+            path.push_back(s ^ 1);
             return;
         }
 

@@ -1,5 +1,4 @@
 use crate::{Dims, DirectedBijectiveConnectionGraphFunctions, Node};
-use std::ops::BitXor;
 
 pub struct LocallyTwistedCube(Dims);
 
@@ -12,9 +11,9 @@ impl LocallyTwistedCube {
 impl DirectedBijectiveConnectionGraphFunctions for LocallyTwistedCube {
     fn phi(&self, n: Dims, node: Node) -> Node {
         if n < 3 {
-            node.bitxor(1 << (n - 1))
+            node ^ (1 << (n - 1))
         } else {
-            node.bitxor((0b10 | (node & 1)) << (n - 2))
+            node ^ ((0b10 | (node & 1)) << (n - 2))
         }
     }
 
