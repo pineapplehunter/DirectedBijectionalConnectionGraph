@@ -10,20 +10,21 @@ where
     F: DirectedBijectiveConnectionGraphFunctions,
 {
     fn lemma1(&self, n: Dims, d: Node) -> Vec<NodePath> {
-        let mut paths = Vec::new();
+        let mut paths = Vec::with_capacity(n as usize);
 
-        let mut direct_path = NodePath::new(self.dimension());
-        direct_path.push_front(d);
-        direct_path.push_front(self.psi(n, d));
+        let mut direct_path = NodePath::new_with_initial_size(self.dimension(), 2);
+        direct_path.push_back(self.psi(n, d));
+        direct_path.push_back(d);
         paths.push(direct_path);
 
         for i in 1..n {
-            let mut p = NodePath::new(self.dimension());
-            p.push_front(d);
+            let mut p = NodePath::new_with_initial_size(self.dimension(), 3);
             let dd = self.psi(i, d);
             let ddd = self.psi(n, dd);
-            p.push_front(dd);
-            p.push_front(ddd);
+
+            p.push_back(ddd);
+            p.push_back(dd);
+            p.push_back(d);
 
             paths.push(p);
         }

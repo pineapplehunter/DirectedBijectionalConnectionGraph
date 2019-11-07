@@ -22,8 +22,6 @@ where
         assert!(d.len() <= self.dimension() as usize);
         assert_ne!(d.len(), 0);
 
-        //dbg!(&d);
-
         if d.len() == 1 {
             if d[0] == s {
                 let mut tmp = NodePath::new(self.dimension());
@@ -81,8 +79,8 @@ where
                 .copied()
                 .collect::<Vec<u64>>();
 
-            let mut new_d = vec![];
-            let mut tmp_paths = vec![];
+            let mut new_d = Vec::with_capacity(dim as usize);
+            let mut tmp_paths = Vec::with_capacity(self.dimension() as usize);
 
             for &n in d {
                 if n & mask == s & mask {
