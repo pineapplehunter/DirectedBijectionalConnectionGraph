@@ -1,11 +1,10 @@
 use crate::{Dims, Node};
-use std::collections::VecDeque;
 use std::fmt::{Debug, Error, Formatter};
 
 #[derive(PartialEq)]
 pub struct NodePath {
     dimensions: Dims,
-    path: VecDeque<Node>,
+    path: Vec<Node>,
 }
 
 impl NodePath {
@@ -13,32 +12,35 @@ impl NodePath {
     pub fn new(n: Dims) -> Self {
         Self {
             dimensions: n,
-            path: VecDeque::new(),
+            path: Vec::new(),
+        }
+    }
+
+    #[inline(always)]
+    pub fn new_with_initial_size(n: Dims, size: usize) -> Self {
+        Self {
+            dimensions: n,
+            path: Vec::with_capacity(size),
         }
     }
 
     pub fn from_vec(n: Dims, src: Vec<Node>) -> Self {
         Self {
             dimensions: n,
-            path: src.into(),
+            path: src,
         }
     }
 
     #[inline(always)]
     pub fn push_back(&mut self, n: Node) {
-        self.path.push_back(n);
+        self.path.push(n);
     }
 
-    #[inline(always)]
-    pub fn push_front(&mut self, n: Node) {
-        self.path.push_front(n);
-    }
-
-    pub fn inner_path(&self) -> &VecDeque<Node> {
+    pub fn inner_path(&self) -> &Vec<Node> {
         &self.path
     }
 
-    pub fn inner_path_mut(&mut self) -> &mut VecDeque<Node> {
+    pub fn inner_path_mut(&mut self) -> &mut Vec<Node> {
         &mut self.path
     }
 }
