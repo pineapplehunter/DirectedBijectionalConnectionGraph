@@ -24,11 +24,11 @@ where
 
         if d.len() == 1 {
             if d[0] == s {
-                let mut tmp = NodePath::new(self.dimension());
+                let mut tmp = NodePath::new(self);
                 tmp.push_back(s);
                 return vec![tmp];
             } else {
-                let mut tmp = NodePath::new(self.dimension());
+                let mut tmp = NodePath::new(self);
                 tmp.push_back(s);
                 tmp.push_back(s ^ 1);
                 return vec![tmp];
@@ -46,7 +46,7 @@ where
             .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
             paths = self.node_to_set(s, &d[..dim as usize - 1]);
-            paths.push(NodePath::new(self.dimension()));
+            paths.push(NodePath::new(self));
 
             debug_assert_eq!(paths.len(), dim as usize);
 
@@ -85,7 +85,7 @@ where
             for &n in d {
                 if n & mask == s & mask {
                     new_d.push(n);
-                    tmp_paths.push(NodePath::new(self.dimension()));
+                    tmp_paths.push(NodePath::new(self));
                 } else {
                     let dd = self.psi(dim, n);
                     if !same_ds.contains(&&dd) {
@@ -93,7 +93,7 @@ where
 
                         new_d.push(dd);
                         tmp_paths.push({
-                            let mut path = NodePath::new(self.dimension());
+                            let mut path = NodePath::new(self);
                             path.push_back(n);
                             path
                         });
@@ -105,7 +105,7 @@ where
                             if !same_ds.contains(&&ddd) {
                                 new_d.push(ddd);
                                 tmp_paths.push({
-                                    let mut path = NodePath::new(self.dimension());
+                                    let mut path = NodePath::new(self);
                                     path.push_back(dd);
                                     path.push_back(n);
                                     path
@@ -126,7 +126,7 @@ where
             let mut working_index = d.iter().position(|&node| node & mask != s & mask).unwrap();
             let dn = d[working_index];
 
-            let mut path = NodePath::new(self.dimension());
+            let mut path = NodePath::new(self);
             let phi_s = self.phi(dim, s);
             path.push_back(s);
             path.push_back(phi_s);
@@ -150,7 +150,7 @@ where
                 }
             }
 
-            tmp_paths[working_index] = NodePath::new(self.dimension());
+            tmp_paths[working_index] = NodePath::new(self);
 
             new_d.swap(working_index, dim as usize - 1);
             let mut partial_paths = self.node_to_set(s, &new_d[..dim as usize - 1]);
@@ -178,7 +178,6 @@ where
 #[cfg(test)]
 mod test {
     use crate::graphs::HyperCube;
-    use crate::node_path::NodePath;
     use crate::NodeToSet;
 
     #[test]
@@ -190,13 +189,12 @@ mod test {
 
         let paths = graph.node_to_set(s, &d);
 
-        let expected_paths: Vec<NodePath> = vec![
-            NodePath::from_vec(4, vec![0b0000, 0b0001]),
-            NodePath::from_vec(4, vec![0b0000, 0b0010, 0b0011]),
-            NodePath::from_vec(4, vec![0b0000, 0b0100, 0b0110, 0b0111]),
-            NodePath::from_vec(4, vec![0b0000, 0b1000, 0b1100, 0b1110, 0b1111]),
-        ];
+        assert_eq!(paths.len(), 4);
 
-        assert_eq!(paths, expected_paths);
+        paths.iter().zip(d.iter()).for_each(|(path, dest)| {
+            assert!(path.is_valid());
+            assert_eq!(path.inner_path().first().unwrap(), &0b0000);
+            assert_eq!(path.inner_path().last().unwrap(), dest);
+        });
     }
 }

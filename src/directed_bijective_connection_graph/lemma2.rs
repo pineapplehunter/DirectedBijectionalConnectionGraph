@@ -21,7 +21,7 @@ where
 
     #[allow(non_snake_case)]
     fn R(&self, s: Node, d: Node) -> NodePath {
-        let mut path = NodePath::new(self.dimension());
+        let mut path = NodePath::new(self);
         path.push_back(s);
 
         self.R_helper(self.dimension(), s, d, &mut path);
@@ -60,7 +60,6 @@ where
 #[cfg(test)]
 mod test {
     use crate::graphs::HyperCube;
-    use crate::node_path::NodePath;
     use crate::Lemma2;
 
     #[test]
@@ -68,17 +67,8 @@ mod test {
         let graph = HyperCube::new(8);
         let path = graph.lemma2(0b0011_0011, 0b1010_1010);
 
-        let expected_path = NodePath::from_vec(
-            8,
-            vec![
-                0b0011_0011,
-                0b1011_0011,
-                0b1010_0011,
-                0b1010_1011,
-                0b1010_1010,
-            ],
-        );
-
-        assert_eq!(path, expected_path);
+        assert!(path.is_valid());
+        assert_eq!(path.inner_path().first().unwrap(), &0b0011_0011);
+        assert_eq!(path.inner_path().last().unwrap(), &0b1010_1010);
     }
 }

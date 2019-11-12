@@ -12,13 +12,13 @@ where
     fn lemma1(&self, n: Dims, d: Node) -> Vec<NodePath> {
         let mut paths = Vec::with_capacity(n as usize);
 
-        let mut direct_path = NodePath::new_with_initial_size(self.dimension(), 2);
+        let mut direct_path = NodePath::new_with_initial_size(self, 2);
         direct_path.push_back(self.psi(n, d));
         direct_path.push_back(d);
         paths.push(direct_path);
 
         for i in 1..n {
-            let mut p = NodePath::new_with_initial_size(self.dimension(), 3);
+            let mut p = NodePath::new_with_initial_size(self, 3);
             let dd = self.psi(i, d);
             let ddd = self.psi(n, dd);
 
@@ -36,7 +36,6 @@ where
 #[cfg(test)]
 mod test {
     use crate::graphs::HyperCube;
-    use crate::node_path::NodePath;
     use crate::Lemma1;
 
     #[test]
@@ -44,13 +43,12 @@ mod test {
         let graph = HyperCube::new(4);
         let paths = graph.lemma1(4, 0b0011);
 
-        let expected_paths: Vec<NodePath> = vec![
-            NodePath::from_vec(4, vec![0b1011, 0b0011]),
-            NodePath::from_vec(4, vec![0b1010, 0b0010, 0b0011]),
-            NodePath::from_vec(4, vec![0b1001, 0b0001, 0b0011]),
-            NodePath::from_vec(4, vec![0b1111, 0b0111, 0b0011]),
-        ];
-
-        assert_eq!(paths, expected_paths);
+        assert!(paths.iter().all(|path| path.is_valid()));
+        let mut deduped = paths.clone();
+        deduped.dedup();
+        assert_eq!(paths.len(), deduped.len());
+        assert!(paths
+            .iter()
+            .all(|path| (path.inner_path().first().unwrap() & (1 << 3)) != 0));
     }
 }

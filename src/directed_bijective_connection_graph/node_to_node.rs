@@ -34,7 +34,7 @@ where
         if s & mask == d & mask {
             paths = self.node_to_node_helper(n - 1, s, d);
 
-            let mut path = NodePath::new(self.dimension());
+            let mut path = NodePath::new(self);
             path.push_back(s);
             let phi_s = self.phi(n, s);
             path.push_back(phi_s);
@@ -43,7 +43,7 @@ where
 
             paths.push(path);
         } else {
-            let mut path = NodePath::new(self.dimension());
+            let mut path = NodePath::new(self);
             path.push_back(s);
             let phi_s = self.phi(n, s);
             path.push_back(phi_s);
@@ -83,7 +83,6 @@ where
 #[cfg(test)]
 mod test {
     use crate::graphs::HyperCube;
-    use crate::node_path::NodePath;
     use crate::NodeToNode;
 
     #[test]
@@ -95,13 +94,16 @@ mod test {
 
         let paths = graph.node_to_node(s, d);
 
-        let expected_paths: Vec<NodePath> = vec![
-            NodePath::from_vec(4, vec![0b0000, 0b0100, 0b0110, 0b0111, 0b1111]),
-            NodePath::from_vec(4, vec![0b0000, 0b0001, 0b0101, 0b1101, 0b1111]),
-            NodePath::from_vec(4, vec![0b0000, 0b0010, 0b0011, 0b1011, 0b1111]),
-            NodePath::from_vec(4, vec![0b0000, 0b1000, 0b1100, 0b1110, 0b1111]),
-        ];
-
-        assert_eq!(paths, expected_paths);
+        assert_eq!(paths.len(), 4);
+        assert!(paths
+            .iter()
+            .take(paths.len() - 1)
+            .zip(paths.iter().skip(1))
+            .all(|(p1, p2)| p1 != p2));
+        paths.iter().for_each(|path| {
+            assert!(path.is_valid());
+            assert_eq!(path.inner_path().first().unwrap(), &0b0000);
+            assert_eq!(path.inner_path().last().unwrap(), &0b1111);
+        })
     }
 }
