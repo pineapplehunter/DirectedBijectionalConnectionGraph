@@ -11,7 +11,7 @@ fn hyper_cube_lemma1_64bit(b: &mut Bencher) {
 
     let graph = HyperCube::new(dim);
 
-    let d = 0x0000_0000_0000_0000;
+    let d = 0xffff_ffff_0000_0000;
 
     b.iter(|| graph.lemma1(dim, d));
 }
@@ -22,8 +22,8 @@ fn hyper_cube_lemma2_64bit(b: &mut Bencher) {
 
     let graph = HyperCube::new(dim);
 
-    let s = 0x0000_0000_0000_0000;
-    let d = 0xffff_ffff_ffff_ffff;
+    let s = 0x0000_0000_ffff_ffff;
+    let d = 0xffff_ffff_0000_0000;
 
     b.iter(|| graph.lemma2(s, d));
 }
@@ -34,7 +34,7 @@ fn hyper_cube_node_to_set_64bit(b: &mut Bencher) {
 
     let graph = HyperCube::new(dim);
 
-    let s = 0x0000_0000_0000_0000;
+    let s = 0x0000_0000_ffff_ffff;
     let mut d = vec![];
 
     for i in 0..64 {
@@ -50,7 +50,7 @@ fn hyper_cube_node_to_node_64bit(b: &mut Bencher) {
 
     let graph = HyperCube::new(dim);
 
-    let s = 0x0000_0000_0000_0000;
-    let d = 0xffff_ffff_ffff_ffff;
+    let s = 0x0000_0000_ffff_ffff;
+    let d = 0xffff_ffff_0000_0000;
     b.iter(|| graph.node_to_node(s, d));
 }
