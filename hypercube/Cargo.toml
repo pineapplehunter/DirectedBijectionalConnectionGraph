@@ -3,8 +3,10 @@ name = "hypercube"
 version = "0.1.0"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "an implimentation of hyper cube"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-directed_bijective_connection_graph = {version="0.2.1", path="../directed_bijective_connection_graph/"}
+directed_bijective_connection_graph = {version="0.2.0", path="../directed_bijective_connection_graph/"}
