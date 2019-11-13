@@ -1,5 +1,5 @@
-use directed_bijectional_connection_graph::graphs::HyperCube;
-use directed_bijectional_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use hypercube::graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use hypercube::HyperCube;
 
 fn main() {
     example_lemma1();

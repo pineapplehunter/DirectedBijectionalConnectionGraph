@@ -59,8 +59,7 @@ impl<'a> NodePath<'a> {
             .take(self.path.len() - 1)
             .zip(self.path.iter().skip(1))
             .all(|(&first, &second)| {
-                (1..=self.graph.dimension())
-                    .any(|n| self.graph.phi(n, first) == second)
+                (1..=self.graph.dimension()).any(|n| self.graph.phi(n, first) == second)
             })
     }
 }

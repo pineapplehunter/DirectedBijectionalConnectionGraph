@@ -1,7 +1,7 @@
 #![feature(test)]
 
 extern crate test;
-use directed_bijectional_connection_graph::{
+use directed_bijective_connection_graph::{
     Dims, DirectedBijectiveConnectionGraphFunctions, Lemma1, Lemma2, Node, NodeToNode, NodeToSet,
 };
 use test::Bencher;

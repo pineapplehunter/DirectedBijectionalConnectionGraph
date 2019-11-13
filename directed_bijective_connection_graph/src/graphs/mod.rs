@@ -1,5 +1,5 @@
-mod hyper_cube;
+mod hypercube;
 mod locally_twisted_cube;
 
-pub use hyper_cube::HyperCube;
+pub use hypercube::HyperCube;
 pub use locally_twisted_cube::LocallyTwistedCube;

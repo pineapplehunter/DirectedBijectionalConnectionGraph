@@ -1,5 +1,4 @@
-use crate::directed_bijective_connection_graph::functions::DirectedBijectiveConnectionGraphFunctions;
-use crate::{Dims, Node};
+use crate::{Dims, DirectedBijectiveConnectionGraphFunctions, Node};
 
 pub struct HyperCube(Dims);
 impl DirectedBijectiveConnectionGraphFunctions for HyperCube {

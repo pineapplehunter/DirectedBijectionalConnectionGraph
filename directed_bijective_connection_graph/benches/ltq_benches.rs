@@ -1,8 +1,8 @@
 #![feature(test)]
 
 extern crate test;
-use directed_bijectional_connection_graph::graphs::LocallyTwistedCube;
-use directed_bijectional_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use directed_bijective_connection_graph::graphs::LocallyTwistedCube;
+use directed_bijective_connection_graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
 use test::Bencher;
 
 #[bench]
