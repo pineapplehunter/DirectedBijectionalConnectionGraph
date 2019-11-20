@@ -3,6 +3,8 @@ name = "gt-ltq"
 version = "0.1.0"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
+description = "solve path graph theory problems on an ltq"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
