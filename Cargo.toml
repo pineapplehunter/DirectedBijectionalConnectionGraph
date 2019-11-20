@@ -1,6 +1,8 @@
 [workspace]
 members = [
-    "directed_bijective_connection_graph",
-    "hypercube",
-    "ltq"
+    "gt-directed-bijective-connection-graph",
+    "gt-hypercube",
+    "gt-ltq",
+    "gt-bijective-connection-graph",
+    "gt-graph-path",
 ]
