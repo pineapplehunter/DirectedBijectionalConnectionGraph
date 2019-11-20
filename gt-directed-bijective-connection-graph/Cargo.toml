@@ -11,6 +11,3 @@ description = "an implimentation of a directed bijective connection graph"
 [dependencies]
 gt-graph-path = {version="0.1",path="../gt-graph-path"}
 gt-graph = {version="0.1",path = "../gt-graph"}
-
-[dev-dependencies]
-gt-hypercube = {version="0.1",path="../gt-hypercube"}

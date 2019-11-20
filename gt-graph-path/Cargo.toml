@@ -3,6 +3,8 @@ name = "gt-graph-path"
 version = "0.1.0"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
+description = "discribe a path on a graph"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
