@@ -77,31 +77,3 @@ where
         paths
     }
 }
-
-#[cfg(test)]
-mod test {
-    use gt_hypercube::graph::NodeToNode;
-    use gt_hypercube::HyperCube;
-
-    #[test]
-    fn node_to_set() {
-        let graph = HyperCube::new(4);
-
-        let s = 0b0000;
-        let d = 0b1111;
-
-        let paths = graph.node_to_node(s, d);
-
-        assert_eq!(paths.len(), 4);
-        assert!(paths
-            .iter()
-            .take(paths.len() - 1)
-            .zip(paths.iter().skip(1))
-            .all(|(p1, p2)| p1 != p2));
-        paths.iter().for_each(|path| {
-            assert!(path.is_valid());
-            assert_eq!(path.inner_path().first().unwrap(), &0b0000);
-            assert_eq!(path.inner_path().last().unwrap(), &0b1111);
-        })
-    }
-}

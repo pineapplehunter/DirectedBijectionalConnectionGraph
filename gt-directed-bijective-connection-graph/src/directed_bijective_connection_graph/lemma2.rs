@@ -56,19 +56,3 @@ where
         self.R_helper(n - 1, phi_s, d, path);
     }
 }
-
-#[cfg(test)]
-mod test {
-    use gt_hypercube::graph::Lemma2;
-    use gt_hypercube::HyperCube;
-
-    #[test]
-    fn lemma2() {
-        let graph = HyperCube::new(8);
-        let path = graph.lemma2(0b0011_0011, 0b1010_1010);
-
-        assert!(path.is_valid());
-        assert_eq!(path.inner_path().first().unwrap(), &0b0011_0011);
-        assert_eq!(path.inner_path().last().unwrap(), &0b1010_1010);
-    }
-}

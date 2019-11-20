@@ -33,23 +33,3 @@ where
         paths
     }
 }
-
-#[cfg(test)]
-mod test {
-    use gt_hypercube::graph::Lemma1;
-    use gt_hypercube::HyperCube;
-
-    #[test]
-    fn lemma1() {
-        let graph = HyperCube::new(4);
-        let paths = graph.lemma1(4, 0b0011);
-
-        assert!(paths.iter().all(|path| path.is_valid()));
-        let mut deduped = paths.clone();
-        deduped.dedup();
-        assert_eq!(paths.len(), deduped.len());
-        assert!(paths
-            .iter()
-            .all(|path| (path.inner_path().first().unwrap() & (1 << 3)) != 0));
-    }
-}

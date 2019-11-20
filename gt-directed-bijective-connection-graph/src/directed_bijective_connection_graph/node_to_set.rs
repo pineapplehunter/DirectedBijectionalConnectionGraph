@@ -174,27 +174,3 @@ where
         paths
     }
 }
-
-#[cfg(test)]
-mod test {
-    use gt_hypercube::graph::NodeToSet;
-    use gt_hypercube::HyperCube;
-
-    #[test]
-    fn node_to_set() {
-        let graph = HyperCube::new(4);
-
-        let s = 0b0000;
-        let d = [0b0001, 0b0011, 0b0111, 0b1111];
-
-        let paths = graph.node_to_set(s, &d);
-
-        assert_eq!(paths.len(), 4);
-
-        paths.iter().zip(d.iter()).for_each(|(path, dest)| {
-            assert!(path.is_valid());
-            assert_eq!(path.inner_path().first().unwrap(), &0b0000);
-            assert_eq!(path.inner_path().last().unwrap(), dest);
-        });
-    }
-}

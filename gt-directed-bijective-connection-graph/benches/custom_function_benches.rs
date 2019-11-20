@@ -2,10 +2,9 @@
 
 extern crate test;
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnecionGraph, Lemma1, NodeToNode, NodeToSet,
+    DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
 };
 use gt_graph::{Dims, Graph, Node};
-use gt_hypercube::graph::Lemma2;
 use test::Bencher;
 
 #[bench]
