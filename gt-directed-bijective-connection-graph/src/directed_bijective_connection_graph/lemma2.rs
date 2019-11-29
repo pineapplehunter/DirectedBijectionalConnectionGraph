@@ -1,26 +1,33 @@
-use crate::DirectedBijectiveConnecionGraph;
-use gt_graph::{Dims, Node};
+use crate::DirectedBijectiveConnectionGraph;
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
+use std::ops::{BitAnd, BitXor, Sub};
+use std::process::Output;
 
-pub trait Lemma2 {
-    fn lemma2(&self, s: Node, d: Node) -> GraphPath;
+pub trait Lemma2<G>
+where
+    G: Graph,
+{
+    fn lemma2(&self, s: G::Node, d: G::Node) -> GraphPath<G>;
     #[allow(non_snake_case)]
-    fn R(&self, s: Node, d: Node) -> GraphPath;
+    fn R(&self, s: G::Node, d: G::Node) -> GraphPath<G>;
     #[allow(non_snake_case)]
-    fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut GraphPath);
+    fn R_helper(&self, n: G::Dims, s: G::Node, d: G::Node, path: &mut GraphPath<G>);
 }
 
-impl<F> Lemma2 for F
+impl<G, N, D> Lemma2<G> for G
 where
-    F: DirectedBijectiveConnecionGraph,
+    N: Copy + BitAnd<Output = N> + PartialEq + BitXor<Output = N> + InterChangeUsize,
+    D: Copy + InterChangeUsize + PartialEq + Sub<Output = D>,
+    G: DirectedBijectiveConnectionGraph + Graph<Node = N, Dims = D>,
 {
     #[inline(always)]
-    fn lemma2(&self, s: Node, d: Node) -> GraphPath {
+    fn lemma2(&self, s: G::Node, d: G::Node) -> GraphPath<G> {
         self.R(s, d)
     }
 
     #[allow(non_snake_case)]
-    fn R(&self, s: Node, d: Node) -> GraphPath {
+    fn R(&self, s: G::Node, d: G::Node) -> GraphPath<G> {
         let mut path = GraphPath::new(self);
         path.push_back(s);
 
@@ -30,22 +37,22 @@ where
     }
 
     #[allow(non_snake_case)]
-    fn R_helper(&self, n: Dims, s: Node, d: Node, path: &mut GraphPath) {
+    fn R_helper(&self, n: G::Dims, s: G::Node, d: G::Node, path: &mut GraphPath<G>) {
         // if same: do nothing
         if s == d {
             return;
         }
 
         // Step 1
-        if n == 1 {
-            path.push_back(s ^ 1);
+        if n == InterChangeUsize::from_usize(1) {
+            path.push_back(s ^ InterChangeUsize::from_usize(1));
             return;
         }
 
         // Step 2
-        let mask = 1 << (n - 1);
+        let mask: N = InterChangeUsize::from_usize(1 << (n.to_usize() - 1));
         if s & mask == d & mask {
-            self.R_helper(n - 1, s, d, path);
+            self.R_helper(n - InterChangeUsize::from_usize(1), s, d, path);
             return;
         }
 
@@ -53,6 +60,11 @@ where
         let phi_s;
         phi_s = self.phi(n, s);
         path.push_back(phi_s);
-        self.R_helper(n - 1, phi_s, d, path);
+        self.R_helper(
+            InterChangeUsize::from_usize(n.to_usize() - 1),
+            phi_s,
+            d,
+            path,
+        );
     }
 }

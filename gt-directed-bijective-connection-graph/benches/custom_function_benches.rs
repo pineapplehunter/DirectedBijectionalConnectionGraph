@@ -2,9 +2,9 @@
 
 extern crate test;
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
+    DirectedBijectiveConnectionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
 };
-use gt_graph::{Dims, Graph, Node};
+use gt_graph::Graph;
 use test::Bencher;
 
 #[bench]
@@ -57,35 +57,38 @@ fn custom_function_node_to_node_64bit(b: &mut Bencher) {
     b.iter(|| graph.node_to_node(s, d));
 }
 
-struct CustomFunctionGraph(Dims);
+struct CustomFunctionGraph(u8);
 
 impl CustomFunctionGraph {
-    pub fn new(n: Dims) -> Self {
+    pub fn new(n: u8) -> Self {
         Self(n)
     }
 }
 
 impl Graph for CustomFunctionGraph {
+    type Node = u64;
+    type Dims = u8;
+
     #[inline(always)]
-    fn dimension(&self) -> u64 {
+    fn dimension(&self) -> Self::Dims {
         self.0
     }
 
-    fn phi(&self, n: Dims, node: Node) -> Node {
-        let mask = 1 << (n - 1);
+    fn phi(&self, n: Self::Dims, node: Self::Node) -> Self::Node {
+        let mask = 1 << (n - 1) as u64;
         if node & mask == 0 {
-            (1 << (n - 1)) ^ (node)
+            (1 << (n - 1)) as u64 ^ (node)
         } else {
             (u64::max_value() << (n)) ^ (u64::max_value()) ^ (node)
         }
     }
 }
 
-impl DirectedBijectiveConnecionGraph for CustomFunctionGraph {
-    fn psi(&self, n: Dims, node: Node) -> Node {
-        let mask = 1 << (n - 1);
+impl DirectedBijectiveConnectionGraph for CustomFunctionGraph {
+    fn psi(&self, n: Self::Dims, node: Self::Node) -> Self::Node {
+        let mask = 1 << (n - 1) as u64;
         if node & mask != 0 {
-            (1 << (n - 1)) ^ (node)
+            (1 << (n - 1)) as u64 ^ (node)
         } else {
             (u64::max_value() << (n)) ^ (u64::max_value()) ^ (node)
         }

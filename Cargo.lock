@@ -5,6 +5,8 @@ name = "gt-bijective_connection_graph"
 version = "0.1.0"
 dependencies = [
  "gt-directed-bijective-connection-graph 0.2.1",
+ "gt-graph 0.1.0",
+ "gt-graph-path 0.1.0",
 ]
 
 [[package]]

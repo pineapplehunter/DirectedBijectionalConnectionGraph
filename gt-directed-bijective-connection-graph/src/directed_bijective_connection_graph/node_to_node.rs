@@ -1,36 +1,47 @@
-use crate::{DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToSet};
-use gt_graph::{Dims, Node};
+use crate::{DirectedBijectiveConnectionGraph, Lemma1, Lemma2, NodeToSet};
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
+use std::ops::{BitAnd, Sub};
 
-pub trait NodeToNode {
+pub trait NodeToNode<G>
+where
+    G: Graph,
+{
     #[allow(non_snake_case)]
-    fn N2N(&self, s: Node, d: Node) -> Vec<GraphPath>;
-    fn node_to_node(&self, s: Node, d: Node) -> Vec<GraphPath>;
-    fn node_to_node_helper(&self, n: Dims, s: Node, d: Node) -> Vec<GraphPath>;
+    fn N2N(&self, s: G::Node, d: G::Node) -> Vec<GraphPath<G>>;
+    fn node_to_node(&self, s: G::Node, d: G::Node) -> Vec<GraphPath<G>>;
+    fn node_to_node_helper(&self, n: G::Dims, s: G::Node, d: G::Node) -> Vec<GraphPath<G>>;
 }
 
-impl<F> NodeToNode for F
+impl<G, N, D> NodeToNode<G> for G
 where
-    F: DirectedBijectiveConnecionGraph + Lemma2 + Lemma1 + NodeToSet,
+    N: Copy + PartialEq + BitAnd<Output = N> + InterChangeUsize,
+    D: Copy + InterChangeUsize + Sub<Output = D>,
+    G: DirectedBijectiveConnectionGraph
+        + Lemma2<G>
+        + Lemma1<G>
+        + NodeToSet<G>
+        + Graph<Node = N, Dims = D>,
 {
     #[allow(non_snake_case)]
     #[inline(always)]
-    fn N2N(&self, s: Node, d: Node) -> Vec<GraphPath> {
+    fn N2N(&self, s: G::Node, d: G::Node) -> Vec<GraphPath<G>> {
         self.node_to_node(s, d)
     }
 
     #[inline(always)]
-    fn node_to_node(&self, s: Node, d: Node) -> Vec<GraphPath> {
+    fn node_to_node(&self, s: G::Node, d: G::Node) -> Vec<GraphPath<G>> {
         self.node_to_node_helper(self.dimension(), s, d)
     }
 
-    fn node_to_node_helper(&self, n: Dims, s: Node, d: Node) -> Vec<GraphPath> {
+    fn node_to_node_helper(&self, n: G::Dims, s: G::Node, d: G::Node) -> Vec<GraphPath<G>> {
         let mut paths;
 
-        let mask = 1 << (n - 1);
+        let mask: N =
+            InterChangeUsize::from_usize(1 << (n - InterChangeUsize::from_usize(1)).to_usize());
 
         if s & mask == d & mask {
-            paths = self.node_to_node_helper(n - 1, s, d);
+            paths = self.node_to_node_helper(n - InterChangeUsize::from_usize(1), s, d);
 
             let mut path = GraphPath::new(self);
             path.push_back(s);
