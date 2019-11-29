@@ -1,7 +1,6 @@
 pub trait Graph {
-    fn dimension(&self) -> Dims;
-    fn phi(&self, n: Dims, s: Node) -> Node;
+    type Node;
+    type Dims;
+    fn dimension(&self) -> Self::Dims;
+    fn phi(&self, n: Self::Dims, s: Self::Node) -> Self::Node;
 }
-
-pub type Node = u64;
-pub type Dims = u64;

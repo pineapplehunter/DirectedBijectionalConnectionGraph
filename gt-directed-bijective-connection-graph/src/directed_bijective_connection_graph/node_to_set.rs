@@ -1,25 +1,31 @@
 use crate::{DirectedBijectiveConnecionGraph, Lemma2};
-use gt_graph::Node;
+use gt_graph::Graph;
 use gt_graph_path::GraphPath;
+use std::ops::{BitAnd, BitXor};
 
-pub trait NodeToSet {
+pub trait NodeToSet<G>
+where
+    G: Graph,
+{
     #[allow(non_snake_case)]
-    fn N2S(&self, s: Node, d: &[Node]) -> Vec<GraphPath>;
-    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<GraphPath>;
+    fn N2S(&self, s: G::Node, d: &[G::Node]) -> Vec<GraphPath<G>>;
+    fn node_to_set(&self, s: G::Node, d: &[G::Node]) -> Vec<GraphPath<G>>;
 }
 
-impl<F> NodeToSet for F
+impl<G, N, D> NodeToSet<G> for G
 where
-    F: DirectedBijectiveConnecionGraph + Lemma2,
+    N: Copy + PartialEq + BitAnd<Output = N> + Eq + From<u64> + BitXor<Output = N>,
+    D: Copy + Into<usize> + From<usize>,
+    G: DirectedBijectiveConnecionGraph + Lemma2<G> + Graph<Node = N, Dims = D>,
 {
     #[allow(non_snake_case)]
     #[inline(always)]
-    fn N2S(&self, s: Node, d: &[Node]) -> Vec<GraphPath> {
+    fn N2S(&self, s: G::Node, d: &[G::Node]) -> Vec<GraphPath<G>> {
         self.node_to_set(s, d)
     }
 
-    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<GraphPath> {
-        assert!(d.len() <= self.dimension() as usize);
+    fn node_to_set(&self, s: G::Node, d: &[G::Node]) -> Vec<GraphPath<G>> {
+        assert!(d.len() <= self.dimension().into());
         assert_ne!(d.len(), 0);
 
         if d.len() == 1 {
@@ -30,27 +36,27 @@ where
             } else {
                 let mut tmp = GraphPath::new(self);
                 tmp.push_back(s);
-                tmp.push_back(s ^ 1);
+                tmp.push_back(s ^ 1.into());
                 return vec![tmp];
             }
         }
 
         let mut paths;
 
-        let dim = d.len() as u64;
-        let mask = 1 << (dim - 1);
+        let dim = G::Dims::from(d.len());
+        let mask: N = (1 << (dim.into() - 1)).into();
 
         let all_on_same_side_as_src = d
             .iter()
             .map(|node| *node & mask)
             .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
-            paths = self.node_to_set(s, &d[..dim as usize - 1]);
+            paths = self.node_to_set(s, &d[..dim.into() - 1]);
             paths.push(GraphPath::new(self));
 
-            debug_assert_eq!(paths.len(), dim as usize);
+            debug_assert_eq!(paths.len(), dim.into());
 
-            let mut working_index = dim as usize - 1;
+            let mut working_index = dim.into() - 1;
 
             for (index, path) in paths.iter().enumerate() {
                 if let Some(pos) = path
@@ -59,7 +65,7 @@ where
                     .position(|&node| node == d[working_index])
                 {
                     paths[index].inner_path_mut().truncate(pos);
-                    paths.swap(index, dim as usize - 1);
+                    paths.swap(index, dim.into() - 1);
                     working_index = index;
                     break;
                 }
@@ -75,12 +81,12 @@ where
         } else {
             let mut same_ds = d
                 .iter()
-                .filter(|&node| node & mask == s & mask)
+                .filter(|&&node| node & mask == s & mask)
                 .copied()
-                .collect::<Vec<u64>>();
+                .collect::<Vec<N>>();
 
-            let mut new_d = Vec::with_capacity(dim as usize);
-            let mut tmp_paths = Vec::with_capacity(self.dimension() as usize);
+            let mut new_d = Vec::with_capacity(dim.into());
+            let mut tmp_paths = Vec::with_capacity(self.dimension().into());
 
             for &n in d {
                 if n & mask == s & mask {
@@ -98,8 +104,8 @@ where
                             path
                         });
                     } else {
-                        for i in (1..dim).rev() {
-                            let dd = self.psi(i, n);
+                        for i in (1..dim.into()).rev() {
+                            let dd = self.psi(i.into(), n);
                             let ddd = self.psi(dim, dd);
 
                             if !same_ds.contains(&&ddd) {
@@ -117,13 +123,16 @@ where
                 }
             }
 
-            debug_assert_eq!(new_d.len(), dim as usize);
-            debug_assert_eq!(tmp_paths.len(), dim as usize);
+            debug_assert_eq!(new_d.len(), dim.into());
+            debug_assert_eq!(tmp_paths.len(), dim.into());
 
             //dbg!(&new_d);
             //dbg!(&tmp_paths);
 
-            let mut working_index = d.iter().position(|&node| node & mask != s & mask).unwrap();
+            let mut working_index = d
+                .iter()
+                .position(|&node| node & mask != s & mask.into())
+                .unwrap();
             let dn = d[working_index];
 
             let mut path = GraphPath::new(self);
@@ -152,10 +161,10 @@ where
 
             tmp_paths[working_index] = GraphPath::new(self);
 
-            new_d.swap(working_index, dim as usize - 1);
-            let mut partial_paths = self.node_to_set(s, &new_d[..dim as usize - 1]);
+            new_d.swap(working_index, dim.into() - 1);
+            let mut partial_paths = self.node_to_set(s, &new_d[..dim.into() - 1]);
             partial_paths.push(path);
-            partial_paths.swap(working_index, dim as usize - 1);
+            partial_paths.swap(working_index, dim.into() - 1);
 
             //dbg!(&partial_paths);
 
@@ -170,7 +179,7 @@ where
             paths = partial_paths;
         }
 
-        debug_assert_eq!(paths.len(), dim as usize);
+        debug_assert_eq!(paths.len(), dim.into());
         paths
     }
 }

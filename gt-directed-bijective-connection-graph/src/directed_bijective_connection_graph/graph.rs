@@ -1,11 +1,8 @@
-use crate::{Lemma1, Lemma2, NodeToNode, NodeToSet};
-use gt_graph::{Dims, Graph, Node};
+use gt_graph::Graph;
 
-pub trait DirectedBijectiveConnecionGraph:
-    Graph + Lemma1 + Lemma2 + NodeToNode + NodeToSet
-{
+pub trait DirectedBijectiveConnecionGraph: Graph {
     #[inline(always)]
-    fn psi(&self, n: Dims, node: Node) -> Node {
+    fn psi(&self, n: Self::Dims, node: Self::Node) -> Self::Node {
         self.phi(n, node)
     }
 }
