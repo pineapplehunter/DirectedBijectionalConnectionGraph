@@ -1,4 +1,4 @@
-use crate::{DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToSet};
+use crate::{DirectedBijectiveConnectionGraph, Lemma1, Lemma2, NodeToSet};
 use gt_graph::Graph;
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, Sub};
@@ -17,7 +17,7 @@ impl<G, N, D> NodeToNode<G> for G
 where
     N: Copy + PartialEq + BitAnd<Output = N> + From<usize>,
     D: Copy + Into<usize> + From<usize> + Sub<usize, Output = D>,
-    G: DirectedBijectiveConnecionGraph
+    G: DirectedBijectiveConnectionGraph
         + Lemma2<G>
         + Lemma1<G>
         + NodeToSet<G>

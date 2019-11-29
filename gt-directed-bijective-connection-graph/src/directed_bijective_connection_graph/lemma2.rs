@@ -1,4 +1,4 @@
-use crate::DirectedBijectiveConnecionGraph;
+use crate::DirectedBijectiveConnectionGraph;
 use gt_graph::Graph;
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, BitXor, Sub};
@@ -18,7 +18,7 @@ impl<G, N, D> Lemma2<G> for G
 where
     N: Copy + Clone + BitAnd<Output = N> + PartialEq + BitXor<Output = N> + From<usize>,
     D: Copy + Clone + Sub<usize, Output = D> + From<usize> + Into<usize> + PartialEq,
-    G: DirectedBijectiveConnecionGraph + Graph<Node = N, Dims = D>,
+    G: DirectedBijectiveConnectionGraph + Graph<Node = N, Dims = D>,
 {
     #[inline(always)]
     fn lemma2(&self, s: G::Node, d: G::Node) -> GraphPath<G> {

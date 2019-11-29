@@ -1,4 +1,4 @@
-use crate::{DirectedBijectiveConnecionGraph, Lemma2};
+use crate::{DirectedBijectiveConnectionGraph, Lemma2};
 use gt_graph::Graph;
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, BitXor};
@@ -16,7 +16,7 @@ impl<G, N, D> NodeToSet<G> for G
 where
     N: Copy + PartialEq + BitAnd<Output = N> + Eq + From<u64> + BitXor<Output = N>,
     D: Copy + Into<usize> + From<usize>,
-    G: DirectedBijectiveConnecionGraph + Lemma2<G> + Graph<Node = N, Dims = D>,
+    G: DirectedBijectiveConnectionGraph + Lemma2<G> + Graph<Node = N, Dims = D>,
 {
     #[allow(non_snake_case)]
     #[inline(always)]

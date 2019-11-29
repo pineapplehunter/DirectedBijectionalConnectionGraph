@@ -1,4 +1,4 @@
-use gt_directed_bijective_connection_graph::DirectedBijectiveConnecionGraph;
+use gt_directed_bijective_connection_graph::DirectedBijectiveConnectionGraph;
 use gt_graph::Graph;
 
 /// # Locally Twisted Cube
@@ -39,4 +39,4 @@ impl Graph for LocallyTwistedCube {
     }
 }
 
-impl DirectedBijectiveConnecionGraph for LocallyTwistedCube {}
+impl DirectedBijectiveConnectionGraph for LocallyTwistedCube {}

@@ -1,4 +1,4 @@
-use crate::DirectedBijectiveConnecionGraph;
+use crate::DirectedBijectiveConnectionGraph;
 use gt_graph::Graph;
 use gt_graph_path::GraphPath;
 
@@ -13,7 +13,7 @@ impl<G, N, D> Lemma1<G> for G
 where
     N: Copy + Clone,
     D: Copy + Clone + Into<usize> + From<usize>,
-    G: DirectedBijectiveConnecionGraph + Graph<Node = N, Dims = D>,
+    G: DirectedBijectiveConnectionGraph + Graph<Node = N, Dims = D>,
 {
     fn lemma1(&self, n: G::Dims, d: G::Node) -> Vec<GraphPath<G>> {
         let mut paths = Vec::with_capacity(n.into());

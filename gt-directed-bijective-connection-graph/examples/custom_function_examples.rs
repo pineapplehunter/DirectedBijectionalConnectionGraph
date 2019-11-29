@@ -1,5 +1,5 @@
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
+    DirectedBijectiveConnectionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
 };
 use gt_graph::{Dims, Graph, Node};
 
@@ -92,7 +92,7 @@ impl Graph for CustomFunctionGraph {
     }
 }
 
-impl DirectedBijectiveConnecionGraph for CustomFunctionGraph {
+impl DirectedBijectiveConnectionGraph for CustomFunctionGraph {
     fn psi(&self, n: Dims, node: Node) -> Node {
         let mask = 1 << (n - 1);
         if node & mask != 0 {
