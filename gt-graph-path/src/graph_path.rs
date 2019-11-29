@@ -1,4 +1,4 @@
-use gt_graph::Graph;
+use gt_graph::{Graph, InterChangeUsize};
 use std::fmt::{Binary, Debug, Error, Formatter};
 
 #[derive(Clone)]
@@ -52,9 +52,11 @@ impl<'a, G: Graph> GraphPath<'a, G> {
     }
 }
 
-impl<'a, G> GraphPath<'a, G>
+impl<'a, N, D, G> GraphPath<'a, G>
 where
-    G: Graph<Node = u64, Dims = u64>,
+    N: Copy + PartialEq,
+    D: Copy + InterChangeUsize,
+    G: Graph<Node = N, Dims = D>,
 {
     pub fn is_valid(&self) -> bool {
         self.path
@@ -62,7 +64,8 @@ where
             .take(self.path.len() - 1)
             .zip(self.path.iter().skip(1))
             .all(|(&first, &second)| {
-                (1..=self.graph.dimension()).any(|n| self.graph.phi(n, first) == second)
+                (1..=self.graph.dimension().to_usize())
+                    .any(|n| self.graph.phi(InterChangeUsize::from_usize(n), first) == second)
             })
     }
 }
@@ -70,7 +73,7 @@ where
 impl<'a, G, N, D> Debug for GraphPath<'a, G>
 where
     N: PartialEq + Binary,
-    D: Into<usize>,
+    D: InterChangeUsize,
     G: Graph<Node = N, Dims = D>,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
@@ -79,13 +82,13 @@ where
             s.push_str(&format!(
                 "{:0dim$b}",
                 self.path[0],
-                dim = self.graph.dimension().into()
+                dim = self.graph.dimension().to_usize()
             ));
             for p in self.path.iter().skip(1) {
                 s.push_str(&format!(
                     " -> {:0dim$b}",
                     p,
-                    dim = self.graph.dimension().into()
+                    dim = self.graph.dimension().to_usize()
                 ));
             }
         }

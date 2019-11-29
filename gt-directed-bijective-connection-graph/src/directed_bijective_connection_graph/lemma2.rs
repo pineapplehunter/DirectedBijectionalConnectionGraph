@@ -1,7 +1,8 @@
 use crate::DirectedBijectiveConnectionGraph;
-use gt_graph::Graph;
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, BitXor, Sub};
+use std::process::Output;
 
 pub trait Lemma2<G>
 where
@@ -16,8 +17,8 @@ where
 
 impl<G, N, D> Lemma2<G> for G
 where
-    N: Copy + Clone + BitAnd<Output = N> + PartialEq + BitXor<Output = N> + From<usize>,
-    D: Copy + Clone + Sub<usize, Output = D> + From<usize> + Into<usize> + PartialEq,
+    N: Copy + BitAnd<Output = N> + PartialEq + BitXor<Output = N> + InterChangeUsize,
+    D: Copy + InterChangeUsize + PartialEq + Sub<Output = D>,
     G: DirectedBijectiveConnectionGraph + Graph<Node = N, Dims = D>,
 {
     #[inline(always)]
@@ -43,15 +44,15 @@ where
         }
 
         // Step 1
-        if n == 1.into() {
-            path.push_back(s ^ 1.into());
+        if n == InterChangeUsize::from_usize(1) {
+            path.push_back(s ^ InterChangeUsize::from_usize(1));
             return;
         }
 
         // Step 2
-        let mask: N = (1 << (n - 1).into()).into();
+        let mask: N = InterChangeUsize::from_usize(1 << (n.to_usize() - 1));
         if s & mask == d & mask {
-            self.R_helper(n - 1, s, d, path);
+            self.R_helper(n - InterChangeUsize::from_usize(1), s, d, path);
             return;
         }
 
@@ -59,6 +60,11 @@ where
         let phi_s;
         phi_s = self.phi(n, s);
         path.push_back(phi_s);
-        self.R_helper(n - 1, phi_s, d, path);
+        self.R_helper(
+            InterChangeUsize::from_usize(n.to_usize() - 1),
+            phi_s,
+            d,
+            path,
+        );
     }
 }

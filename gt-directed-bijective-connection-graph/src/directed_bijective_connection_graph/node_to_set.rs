@@ -1,5 +1,5 @@
 use crate::{DirectedBijectiveConnectionGraph, Lemma2};
-use gt_graph::Graph;
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, BitXor};
 
@@ -14,8 +14,8 @@ where
 
 impl<G, N, D> NodeToSet<G> for G
 where
-    N: Copy + PartialEq + BitAnd<Output = N> + Eq + From<u64> + BitXor<Output = N>,
-    D: Copy + Into<usize> + From<usize>,
+    N: Copy + PartialEq + BitAnd<Output = N> + Eq + InterChangeUsize + BitXor<Output = N>,
+    D: Copy + InterChangeUsize,
     G: DirectedBijectiveConnectionGraph + Lemma2<G> + Graph<Node = N, Dims = D>,
 {
     #[allow(non_snake_case)]
@@ -25,7 +25,7 @@ where
     }
 
     fn node_to_set(&self, s: G::Node, d: &[G::Node]) -> Vec<GraphPath<G>> {
-        assert!(d.len() <= self.dimension().into());
+        assert!(d.len() <= self.dimension().to_usize());
         assert_ne!(d.len(), 0);
 
         if d.len() == 1 {
@@ -36,27 +36,27 @@ where
             } else {
                 let mut tmp = GraphPath::new(self);
                 tmp.push_back(s);
-                tmp.push_back(s ^ 1.into());
+                tmp.push_back(s ^ InterChangeUsize::from_usize(1));
                 return vec![tmp];
             }
         }
 
         let mut paths;
 
-        let dim = G::Dims::from(d.len());
-        let mask: N = (1 << (dim.into() - 1)).into();
+        let dim: D = InterChangeUsize::from_usize(d.len());
+        let mask: N = InterChangeUsize::from_usize(1 << (dim.to_usize() - 1));
 
         let all_on_same_side_as_src = d
             .iter()
             .map(|node| *node & mask)
             .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
-            paths = self.node_to_set(s, &d[..dim.into() - 1]);
+            paths = self.node_to_set(s, &d[..dim.to_usize() - 1]);
             paths.push(GraphPath::new(self));
 
-            debug_assert_eq!(paths.len(), dim.into());
+            debug_assert_eq!(paths.len(), dim.to_usize());
 
-            let mut working_index = dim.into() - 1;
+            let mut working_index = dim.to_usize() - 1;
 
             for (index, path) in paths.iter().enumerate() {
                 if let Some(pos) = path
@@ -65,7 +65,7 @@ where
                     .position(|&node| node == d[working_index])
                 {
                     paths[index].inner_path_mut().truncate(pos);
-                    paths.swap(index, dim.into() - 1);
+                    paths.swap(index, dim.to_usize() - 1);
                     working_index = index;
                     break;
                 }
@@ -85,8 +85,8 @@ where
                 .copied()
                 .collect::<Vec<N>>();
 
-            let mut new_d = Vec::with_capacity(dim.into());
-            let mut tmp_paths = Vec::with_capacity(self.dimension().into());
+            let mut new_d = Vec::with_capacity(dim.to_usize());
+            let mut tmp_paths = Vec::with_capacity(self.dimension().to_usize());
 
             for &n in d {
                 if n & mask == s & mask {
@@ -104,8 +104,8 @@ where
                             path
                         });
                     } else {
-                        for i in (1..dim.into()).rev() {
-                            let dd = self.psi(i.into(), n);
+                        for i in (1..dim.to_usize()).rev() {
+                            let dd = self.psi(InterChangeUsize::from_usize(i), n);
                             let ddd = self.psi(dim, dd);
 
                             if !same_ds.contains(&&ddd) {
@@ -123,8 +123,8 @@ where
                 }
             }
 
-            debug_assert_eq!(new_d.len(), dim.into());
-            debug_assert_eq!(tmp_paths.len(), dim.into());
+            debug_assert_eq!(new_d.len(), dim.to_usize());
+            debug_assert_eq!(tmp_paths.len(), dim.to_usize());
 
             //dbg!(&new_d);
             //dbg!(&tmp_paths);
@@ -161,10 +161,10 @@ where
 
             tmp_paths[working_index] = GraphPath::new(self);
 
-            new_d.swap(working_index, dim.into() - 1);
-            let mut partial_paths = self.node_to_set(s, &new_d[..dim.into() - 1]);
+            new_d.swap(working_index, dim.to_usize() - 1);
+            let mut partial_paths = self.node_to_set(s, &new_d[..dim.to_usize() - 1]);
             partial_paths.push(path);
-            partial_paths.swap(working_index, dim.into() - 1);
+            partial_paths.swap(working_index, dim.to_usize() - 1);
 
             //dbg!(&partial_paths);
 
@@ -179,7 +179,7 @@ where
             paths = partial_paths;
         }
 
-        debug_assert_eq!(paths.len(), dim.into());
+        debug_assert_eq!(paths.len(), dim.to_usize());
         paths
     }
 }

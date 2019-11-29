@@ -1,5 +1,5 @@
 use crate::DirectedBijectiveConnectionGraph;
-use gt_graph::Graph;
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
 
 pub trait Lemma1<G>
@@ -11,21 +11,21 @@ where
 
 impl<G, N, D> Lemma1<G> for G
 where
-    N: Copy + Clone,
-    D: Copy + Clone + Into<usize> + From<usize>,
+    N: Copy,
+    D: Copy + InterChangeUsize,
     G: DirectedBijectiveConnectionGraph + Graph<Node = N, Dims = D>,
 {
     fn lemma1(&self, n: G::Dims, d: G::Node) -> Vec<GraphPath<G>> {
-        let mut paths = Vec::with_capacity(n.into());
+        let mut paths = Vec::with_capacity(n.to_usize());
 
         let mut direct_path = GraphPath::new_with_initial_size(self, 2);
         direct_path.push_back(self.psi(n, d));
         direct_path.push_back(d);
         paths.push(direct_path);
 
-        for i in 1..n.into() {
+        for i in 1..n.to_usize() {
             let mut p = GraphPath::new_with_initial_size(self, 3);
-            let dd = self.psi(i.into(), d);
+            let dd = self.psi(InterChangeUsize::from_usize(i), d);
             let ddd = self.psi(n, dd);
 
             p.push_back(ddd);

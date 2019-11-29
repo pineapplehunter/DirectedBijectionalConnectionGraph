@@ -1,5 +1,5 @@
 use crate::{DirectedBijectiveConnectionGraph, Lemma1, Lemma2, NodeToSet};
-use gt_graph::Graph;
+use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, Sub};
 
@@ -15,8 +15,8 @@ where
 
 impl<G, N, D> NodeToNode<G> for G
 where
-    N: Copy + PartialEq + BitAnd<Output = N> + From<usize>,
-    D: Copy + Into<usize> + From<usize> + Sub<usize, Output = D>,
+    N: Copy + PartialEq + BitAnd<Output = N> + InterChangeUsize,
+    D: Copy + InterChangeUsize + Sub<Output = D>,
     G: DirectedBijectiveConnectionGraph
         + Lemma2<G>
         + Lemma1<G>
@@ -37,10 +37,11 @@ where
     fn node_to_node_helper(&self, n: G::Dims, s: G::Node, d: G::Node) -> Vec<GraphPath<G>> {
         let mut paths;
 
-        let mask: N = (1 << (n - 1).into()).into();
+        let mask: N =
+            InterChangeUsize::from_usize(1 << (n - InterChangeUsize::from_usize(1)).to_usize());
 
         if s & mask == d & mask {
-            paths = self.node_to_node_helper((n.into() - 1).into(), s, d);
+            paths = self.node_to_node_helper(n - InterChangeUsize::from_usize(1), s, d);
 
             let mut path = GraphPath::new(self);
             path.push_back(s);

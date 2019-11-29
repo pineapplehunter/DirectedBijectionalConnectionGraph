@@ -34,7 +34,7 @@ impl Graph for LocallyTwistedCube {
         if n < 3 {
             node ^ (1 << (n as u64 - 1))
         } else {
-            node ^ ((0b10 | (node & 1)) << (n as u64 - 2))
+            (node ^ ((0b10 | (node & 1)) << (n as u64 - 2)))
         }
     }
 }
