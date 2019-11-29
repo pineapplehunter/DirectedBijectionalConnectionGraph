@@ -2,7 +2,6 @@ use crate::DirectedBijectiveConnectionGraph;
 use gt_graph::{Graph, InterChangeUsize};
 use gt_graph_path::GraphPath;
 use std::ops::{BitAnd, BitXor, Sub};
-use std::process::Output;
 
 pub trait Lemma2<G>
 where
