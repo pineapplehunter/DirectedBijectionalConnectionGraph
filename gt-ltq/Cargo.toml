@@ -1,6 +1,6 @@
 [package]
 name = "gt-ltq"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
 description = "solve path graph theory problems on an ltq"
@@ -9,5 +9,5 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gt-graph = {version="0.1", path="../gt-graph"}
-gt-directed-bijective-connection-graph = {version = "0.2", path = "../gt-directed-bijective-connection-graph"}
+gt-graph = {version="0.2", path="../gt-graph"}
+gt-directed-bijective-connection-graph = {version = "0.3", path = "../gt-directed-bijective-connection-graph"}
