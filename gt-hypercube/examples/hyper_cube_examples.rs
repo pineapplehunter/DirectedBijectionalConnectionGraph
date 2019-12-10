@@ -1,6 +1,5 @@
 use gt_hypercube::graph::{
-    NPathsToNode, NodeToNodeDisjointPaths,
-    NodeToSetDisjointPaths, SinglePath,
+    NPathsToNode, NodeToNodeDisjointPaths, NodeToSetDisjointPaths, SinglePath,
 };
 use gt_hypercube::HyperCube;
 

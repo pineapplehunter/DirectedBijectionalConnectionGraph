@@ -1,5 +1,6 @@
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnectionGraph, NPathsToNode, SinglePath, NodeToNodeDisjointPaths, NodeToSetDisjointPaths,
+    DirectedBijectiveConnectionGraph, NPathsToNode, NodeToNodeDisjointPaths,
+    NodeToSetDisjointPaths, SinglePath,
 };
 use gt_graph::{Dims, Graph, Node};
 

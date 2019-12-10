@@ -1,6 +1,4 @@
-use gt_ltq::graph::{NPathsToNode, NodeToNodeDisjointPaths,
-    NodeToSetDisjointPaths, SinglePath,
-};
+use gt_ltq::graph::{NPathsToNode, NodeToNodeDisjointPaths, NodeToSetDisjointPaths, SinglePath};
 use gt_ltq::LocallyTwistedCube;
 
 fn main() {

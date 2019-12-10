@@ -2,7 +2,9 @@
 
 extern crate test;
 
-use gt_hypercube::graph::{NPathsToNode, SinglePath, NodeToNodeDisjointPaths, NodeToSetDisjointPaths};
+use gt_hypercube::graph::{
+    NPathsToNode, NodeToNodeDisjointPaths, NodeToSetDisjointPaths, SinglePath,
+};
 use gt_hypercube::HyperCube;
 use test::Bencher;
 

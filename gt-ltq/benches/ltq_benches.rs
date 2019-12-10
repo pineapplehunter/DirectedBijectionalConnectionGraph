@@ -1,7 +1,7 @@
 #![feature(test)]
 
 extern crate test;
-use gt_ltq::graph::{NPathsToNode, SinglePath, NodeToNodeDisjointPaths, NodeToSetDisjointPaths};
+use gt_ltq::graph::{NPathsToNode, NodeToNodeDisjointPaths, NodeToSetDisjointPaths, SinglePath};
 use gt_ltq::LocallyTwistedCube;
 use test::Bencher;
 
