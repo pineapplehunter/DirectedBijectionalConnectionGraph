@@ -1,8 +1,8 @@
-use crate::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use crate::{NPathsToNode, NodeToNodeDisjointPaths, NodeToSetDisjointPaths, SinglePath};
 use gt_graph::{Dims, Graph, Node};
 
-pub trait DirectedBijectiveConnecionGraph:
-    Graph + Lemma1 + Lemma2 + NodeToNode + NodeToSet
+pub trait DirectedBijectiveConnectionGraph:
+    Graph + SinglePath + NPathsToNode + NodeToNodeDisjointPaths + NodeToSetDisjointPaths
 {
     #[inline(always)]
     fn psi(&self, n: Dims, node: Node) -> Node {

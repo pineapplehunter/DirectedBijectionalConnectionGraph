@@ -1,7 +1,7 @@
 #![feature(test)]
 
 extern crate test;
-use gt_ltq::graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use gt_ltq::graph::{NPathsToNode, SinglePath, NodeToNodeDisjointPaths, NodeToSetDisjointPaths};
 use gt_ltq::LocallyTwistedCube;
 use test::Bencher;
 
@@ -13,7 +13,7 @@ fn ltq_lemma1_64bit(b: &mut Bencher) {
 
     let d = 0xffff_ffff_0000_0000;
 
-    b.iter(|| graph.lemma1(dim, d));
+    b.iter(|| graph.n_paths_to_node(dim, d));
 }
 
 #[bench]
@@ -25,7 +25,7 @@ fn ltq_lemma2_64bit(b: &mut Bencher) {
     let s = 0x0000_0000_ffff_ffff;
     let d = 0xffff_ffff_0000_0000;
 
-    b.iter(|| graph.lemma2(s, d));
+    b.iter(|| graph.single_path(s, d));
 }
 
 #[bench]
@@ -41,7 +41,7 @@ fn ltq_node_to_set_64bit(b: &mut Bencher) {
         d.push(1 << i);
     }
 
-    b.iter(|| graph.node_to_set(s, &d));
+    b.iter(|| graph.node_to_set_disjoint_paths(s, &d));
 }
 
 #[bench]
@@ -52,5 +52,5 @@ fn ltq_node_to_node_64bit(b: &mut Bencher) {
 
     let s = 0x0000_0000_ffff_ffff;
     let d = 0xffff_ffff_0000_0000;
-    b.iter(|| graph.node_to_node(s, d));
+    b.iter(|| graph.node_to_node_disjoint_paths(s, d));
 }

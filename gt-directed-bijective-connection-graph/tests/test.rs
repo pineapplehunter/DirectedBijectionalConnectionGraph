@@ -1,12 +1,13 @@
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
+    DirectedBijectiveConnectionGraph, NPathsToNode, NodeToNodeDisjointPaths,
+    NodeToSetDisjointPaths, SinglePath,
 };
 use gt_graph::{Dims, Graph, Node};
 
 #[test]
 fn lemma1() {
     let graph = CustomFunctionGraph::new(4);
-    let paths = graph.lemma1(4, 0b0011);
+    let paths = graph.n_paths_to_node(4, 0b0011);
 
     assert!(paths.iter().all(|path| path.is_valid()));
     let mut deduped = paths.clone();
@@ -20,7 +21,7 @@ fn lemma1() {
 #[test]
 fn lemma2() {
     let graph = CustomFunctionGraph::new(8);
-    let path = graph.lemma2(0b0011_0011, 0b1010_1010);
+    let path = graph.single_path(0b0011_0011, 0b1010_1010);
 
     assert!(path.is_valid());
     assert_eq!(path.inner_path().first().unwrap(), &0b0011_0011);
@@ -38,7 +39,7 @@ fn node_to_set() {
         d.push(1 << i);
     }
 
-    let paths = graph.node_to_set(s, &d);
+    let paths = graph.node_to_set_disjoint_paths(s, &d);
 
     assert_eq!(paths.len(), 4);
     assert!(paths
@@ -60,7 +61,7 @@ fn node_to_node() {
     let s = 0b0000;
     let d = 0b1111;
 
-    let paths = graph.node_to_node(s, d);
+    let paths = graph.node_to_node_disjoint_paths(s, d);
 
     assert_eq!(paths.len(), 4);
     assert!(paths
@@ -99,7 +100,7 @@ impl Graph for CustomFunctionGraph {
     }
 }
 
-impl DirectedBijectiveConnecionGraph for CustomFunctionGraph {
+impl DirectedBijectiveConnectionGraph for CustomFunctionGraph {
     fn psi(&self, n: Dims, node: Node) -> Node {
         let mask = 1 << (n - 1);
         if node & mask != 0 {

@@ -1,11 +1,11 @@
-pub use crate::directed_bijective_connection_graph::lemma1::Lemma1;
-pub use crate::directed_bijective_connection_graph::lemma2::Lemma2;
-pub use crate::directed_bijective_connection_graph::node_to_node::NodeToNode;
-pub use crate::directed_bijective_connection_graph::node_to_set::NodeToSet;
+pub use n_paths_to_node::NPathsToNode;
+pub use node_to_node_disjoint_paths::NodeToNodeDisjointPaths;
+pub use node_to_set_disjoint_paths::NodeToSetDisjointPaths;
+pub use single_path::SinglePath;
 
 pub mod graph;
 
-mod lemma1;
-mod lemma2;
-mod node_to_node;
-mod node_to_set;
+mod n_paths_to_node;
+mod node_to_node_disjoint_paths;
+mod node_to_set_disjoint_paths;
+mod single_path;

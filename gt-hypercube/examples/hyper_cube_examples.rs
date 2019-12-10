@@ -1,4 +1,7 @@
-use gt_hypercube::graph::{Lemma1, Lemma2, NodeToNode, NodeToSet};
+use gt_hypercube::graph::{
+    NPathsToNode, NodeToNodeDisjointPaths,
+    NodeToSetDisjointPaths, SinglePath,
+};
 use gt_hypercube::HyperCube;
 
 fn main() {
@@ -18,7 +21,7 @@ fn example_lemma1() {
 
     let graph = HyperCube::new(n);
 
-    let path = graph.lemma1(n, s);
+    let path = graph.n_paths_to_node(n, s);
 
     println!("{:#?}", path);
 }
@@ -31,7 +34,7 @@ fn example_lemma2() {
 
     let graph = HyperCube::new(n);
 
-    let path = graph.lemma2(s, d);
+    let path = graph.single_path(s, d);
 
     println!("{:?}", path);
 }
@@ -48,7 +51,7 @@ fn example_node_to_set() {
 
     let graph = HyperCube::new(n);
 
-    let paths = graph.node_to_set(s, &d);
+    let paths = graph.node_to_set_disjoint_paths(s, &d);
 
     println!("{:#?}", paths);
 }
@@ -61,7 +64,7 @@ fn example_node_to_node() {
 
     let graph = HyperCube::new(n);
 
-    let paths = graph.node_to_node(s, d);
+    let paths = graph.node_to_node_disjoint_paths(s, d);
 
     println!("{:#?}", paths);
 }

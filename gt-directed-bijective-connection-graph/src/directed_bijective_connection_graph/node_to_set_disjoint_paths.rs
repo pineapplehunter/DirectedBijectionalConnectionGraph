@@ -1,24 +1,16 @@
-use crate::{DirectedBijectiveConnecionGraph, Lemma2};
+use crate::{DirectedBijectiveConnectionGraph, SinglePath};
 use gt_graph::Node;
 use gt_graph_path::GraphPath;
 
-pub trait NodeToSet {
-    #[allow(non_snake_case)]
-    fn N2S(&self, s: Node, d: &[Node]) -> Vec<GraphPath>;
-    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<GraphPath>;
+pub trait NodeToSetDisjointPaths {
+    fn node_to_set_disjoint_paths(&self, s: Node, d: &[Node]) -> Vec<GraphPath>;
 }
 
-impl<F> NodeToSet for F
+impl<F> NodeToSetDisjointPaths for F
 where
-    F: DirectedBijectiveConnecionGraph + Lemma2,
+    F: DirectedBijectiveConnectionGraph + SinglePath,
 {
-    #[allow(non_snake_case)]
-    #[inline(always)]
-    fn N2S(&self, s: Node, d: &[Node]) -> Vec<GraphPath> {
-        self.node_to_set(s, d)
-    }
-
-    fn node_to_set(&self, s: Node, d: &[Node]) -> Vec<GraphPath> {
+    fn node_to_set_disjoint_paths(&self, s: Node, d: &[Node]) -> Vec<GraphPath> {
         assert!(d.len() <= self.dimension() as usize);
         assert_ne!(d.len(), 0);
 
@@ -45,7 +37,7 @@ where
             .map(|node| *node & mask)
             .all(|node_masked| node_masked == s & mask);
         if all_on_same_side_as_src {
-            paths = self.node_to_set(s, &d[..dim as usize - 1]);
+            paths = self.node_to_set_disjoint_paths(s, &d[..dim as usize - 1]);
             paths.push(GraphPath::new(self));
 
             debug_assert_eq!(paths.len(), dim as usize);
@@ -69,8 +61,10 @@ where
             let psi_d = self.psi(dim, d[working_index]);
 
             let last_path = &mut paths[working_index];
-            last_path.push_back(s);
-            self.R_helper(dim, phi_s, psi_d, last_path);
+            let tmp_path = self.single_path(phi_s, psi_d);
+            last_path
+                .inner_path_mut()
+                .extend(tmp_path.inner_path().iter());
             last_path.push_back(d[working_index]);
         } else {
             let mut same_ds = d
@@ -129,8 +123,8 @@ where
             let mut path = GraphPath::new(self);
             let phi_s = self.phi(dim, s);
             path.push_back(s);
-            path.push_back(phi_s);
-            self.R_helper(dim, phi_s, dn, &mut path);
+            let tmp_path = self.single_path(phi_s, dn);
+            path.inner_path_mut().extend(tmp_path.inner_path().iter());
 
             //dbg!(&path);
 
@@ -153,7 +147,7 @@ where
             tmp_paths[working_index] = GraphPath::new(self);
 
             new_d.swap(working_index, dim as usize - 1);
-            let mut partial_paths = self.node_to_set(s, &new_d[..dim as usize - 1]);
+            let mut partial_paths = self.node_to_set_disjoint_paths(s, &new_d[..dim as usize - 1]);
             partial_paths.push(path);
             partial_paths.swap(working_index, dim as usize - 1);
 

@@ -1,16 +1,16 @@
-use crate::DirectedBijectiveConnecionGraph;
+use crate::DirectedBijectiveConnectionGraph;
 use gt_graph::{Dims, Node};
 use gt_graph_path::GraphPath;
 
-pub trait Lemma1 {
-    fn lemma1(&self, n: Dims, d: Node) -> Vec<GraphPath>;
+pub trait NPathsToNode {
+    fn n_paths_to_node(&self, n: Dims, d: Node) -> Vec<GraphPath>;
 }
 
-impl<F> Lemma1 for F
+impl<F> NPathsToNode for F
 where
-    F: DirectedBijectiveConnecionGraph,
+    F: DirectedBijectiveConnectionGraph,
 {
-    fn lemma1(&self, n: Dims, d: Node) -> Vec<GraphPath> {
+    fn n_paths_to_node(&self, n: Dims, d: Node) -> Vec<GraphPath> {
         let mut paths = Vec::with_capacity(n as usize);
 
         let mut direct_path = GraphPath::new_with_initial_size(self, 2);

@@ -1,5 +1,5 @@
 use gt_directed_bijective_connection_graph::{
-    DirectedBijectiveConnecionGraph, Lemma1, Lemma2, NodeToNode, NodeToSet,
+    DirectedBijectiveConnectionGraph, NPathsToNode, SinglePath, NodeToNodeDisjointPaths, NodeToSetDisjointPaths,
 };
 use gt_graph::{Dims, Graph, Node};
 
@@ -20,7 +20,7 @@ fn example_lemma1() {
 
     let graph = CustomFunctionGraph::new(n);
 
-    let path = graph.lemma1(n, s);
+    let path = graph.n_paths_to_node(n, s);
 
     println!("{:#?}", path);
 }
@@ -33,7 +33,7 @@ fn example_lemma2() {
 
     let graph = CustomFunctionGraph::new(n);
 
-    let path = graph.lemma2(s, d);
+    let path = graph.single_path(s, d);
 
     println!("{:?}", path);
 }
@@ -50,7 +50,7 @@ fn example_node_to_set() {
 
     let graph = CustomFunctionGraph::new(n);
 
-    let paths = graph.node_to_set(s, &d);
+    let paths = graph.node_to_set_disjoint_paths(s, &d);
 
     println!("{:#?}", paths);
 }
@@ -63,7 +63,7 @@ fn example_node_to_node() {
 
     let graph = CustomFunctionGraph::new(n);
 
-    let paths = graph.node_to_node(s, d);
+    let paths = graph.node_to_node_disjoint_paths(s, d);
 
     println!("{:#?}", paths);
 }
@@ -92,7 +92,7 @@ impl Graph for CustomFunctionGraph {
     }
 }
 
-impl DirectedBijectiveConnecionGraph for CustomFunctionGraph {
+impl DirectedBijectiveConnectionGraph for CustomFunctionGraph {
     fn psi(&self, n: Dims, node: Node) -> Node {
         let mask = 1 << (n - 1);
         if node & mask != 0 {
