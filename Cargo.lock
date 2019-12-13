@@ -4,41 +4,41 @@
 name = "gt-bijective_connection_graph"
 version = "0.1.0"
 dependencies = [
- "gt-directed-bijective-connection-graph 0.2.1",
+ "gt-directed-bijective-connection-graph 0.2.2",
 ]
 
 [[package]]
 name = "gt-directed-bijective-connection-graph"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
- "gt-graph 0.1.0",
- "gt-graph-path 0.1.0",
+ "gt-graph 0.1.1",
+ "gt-graph-path 0.1.1",
 ]
 
 [[package]]
 name = "gt-graph"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "gt-graph-path"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
- "gt-graph 0.1.0",
+ "gt-graph 0.1.1",
 ]
 
 [[package]]
 name = "gt-hypercube"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
- "gt-directed-bijective-connection-graph 0.2.1",
- "gt-graph 0.1.0",
+ "gt-directed-bijective-connection-graph 0.2.2",
+ "gt-graph 0.1.1",
 ]
 
 [[package]]
 name = "gt-ltq"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
- "gt-directed-bijective-connection-graph 0.2.1",
- "gt-graph 0.1.0",
+ "gt-directed-bijective-connection-graph 0.2.2",
+ "gt-graph 0.1.1",
 ]
 

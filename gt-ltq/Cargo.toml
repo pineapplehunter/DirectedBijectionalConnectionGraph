@@ -1,6 +1,6 @@
 [package]
 name = "gt-ltq"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
 description = "solve path graph theory problems on an ltq"
