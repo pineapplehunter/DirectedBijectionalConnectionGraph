@@ -1,6 +1,7 @@
 use gt_graph::{Graph, Node};
 use std::fmt::{Debug, Error, Formatter};
 use std::ops::{Deref, DerefMut};
+use std::path::Path;
 
 #[derive(Clone)]
 pub struct GraphPath<'a> {
@@ -88,5 +89,15 @@ impl<'a> Debug for GraphPath<'a> {
             }
         }
         write!(f, "NodePath {{ {} }}", s)
+    }
+}
+
+trait Paths {
+    fn contains(&self, n: Node) -> bool;
+}
+
+impl<'a> Paths for Vec<GraphPath<'a>> {
+    fn contains(&self, n: Node) -> bool {
+        self.iter().any(|path| path.contains(&n))
     }
 }
