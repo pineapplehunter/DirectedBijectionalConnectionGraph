@@ -1,5 +1,6 @@
 use gt_graph::{Graph, Node};
 use std::fmt::{Debug, Error, Formatter};
+use std::ops::{Deref, DerefMut};
 
 #[derive(Clone)]
 pub struct GraphPath<'a> {
@@ -35,26 +36,37 @@ impl<'a> GraphPath<'a> {
     }
 
     #[inline(always)]
-    pub fn push_back(&mut self, n: Node) {
-        self.path.push(n);
-    }
-
-    pub fn inner_path(&self) -> &Vec<Node> {
-        &self.path
-    }
-
-    pub fn inner_path_mut(&mut self) -> &mut Vec<Node> {
-        &mut self.path
+    pub fn push_validate(&mut self, n: Node) -> Result<(), String> {
+        if self.path.last().is_none()
+            || (1..=self.graph.dimension())
+                .any(|n| self.graph.phi(n, *self.path.last().unwrap()) == n)
+        {
+            self.path.push(n);
+            Ok(())
+        } else {
+            Err("Invalid Path".into())
+        }
     }
 
     pub fn is_valid(&self) -> bool {
-        self.path
-            .iter()
-            .take(self.path.len() - 1)
-            .zip(self.path.iter().skip(1))
-            .all(|(&first, &second)| {
-                (1..=self.graph.dimension()).any(|n| self.graph.phi(n, first) == second)
-            })
+        (0..self.path.len() - 1).all(|i| {
+            (1..=self.graph.dimension())
+                .any(|n| self.graph.phi(n, self.path[i]) == self.path[i + 1])
+        })
+    }
+}
+
+impl<'a> Deref for GraphPath<'a> {
+    type Target = Vec<Node>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.path
+    }
+}
+
+impl<'a> DerefMut for GraphPath<'a> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.path
     }
 }
 

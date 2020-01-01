@@ -79,7 +79,7 @@ impl CustomFunctionGraph {
 
 impl Graph for CustomFunctionGraph {
     #[inline(always)]
-    fn dimension(&self) -> u64 {
+    fn dimension(&self) -> Dims {
         self.0
     }
 

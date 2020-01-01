@@ -15,7 +15,7 @@ fn lemma1() {
     assert_eq!(paths.len(), deduped.len());
     assert!(paths
         .iter()
-        .all(|path| (path.inner_path().first().unwrap() & (1 << 3)) != 0));
+        .all(|path| (path.first().unwrap() & (1 << 3)) != 0));
 }
 
 #[test]
@@ -24,8 +24,8 @@ fn lemma2() {
     let path = graph.single_path(0b0011_0011, 0b1010_1010);
 
     assert!(path.is_valid());
-    assert_eq!(path.inner_path().first().unwrap(), &0b0011_0011);
-    assert_eq!(path.inner_path().last().unwrap(), &0b1010_1010);
+    assert_eq!(path.first().unwrap(), &0b0011_0011);
+    assert_eq!(path.last().unwrap(), &0b1010_1010);
 }
 
 #[test]
@@ -49,8 +49,8 @@ fn node_to_set() {
         .all(|(p1, p2)| p1 != p2));
     paths.iter().enumerate().for_each(|(idx, path)| {
         assert!(path.is_valid());
-        assert_eq!(path.inner_path().first().unwrap(), &0b0000);
-        assert_eq!(path.inner_path().last().unwrap(), &d[idx]);
+        assert_eq!(path.first().unwrap(), &0b0000);
+        assert_eq!(path.last().unwrap(), &d[idx]);
     })
 }
 
@@ -71,8 +71,8 @@ fn node_to_node() {
         .all(|(p1, p2)| p1 != p2));
     paths.iter().for_each(|path| {
         assert!(path.is_valid());
-        assert_eq!(path.inner_path().first().unwrap(), &0b0000);
-        assert_eq!(path.inner_path().last().unwrap(), &0b1111);
+        assert_eq!(path.first().unwrap(), &0b0000);
+        assert_eq!(path.last().unwrap(), &0b1111);
     })
 }
 

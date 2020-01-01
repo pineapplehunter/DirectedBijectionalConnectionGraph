@@ -12,7 +12,7 @@ where
 {
     fn single_path(&self, s: Node, d: Node) -> GraphPath {
         let mut path = GraphPath::new(self);
-        path.push_back(s);
+        path.push(s);
 
         single_path_helper(self, self.dimension(), s, d, &mut path);
 
@@ -31,7 +31,7 @@ where
 
     // Step 1
     if n == 1 {
-        path.push_back(s ^ 1);
+        path.push(s ^ 1);
         return;
     }
 
@@ -45,6 +45,6 @@ where
     // Step 3
     let phi_s;
     phi_s = graph.phi(n, s);
-    path.push_back(phi_s);
+    path.push(phi_s);
     single_path_helper(graph, n - 1, phi_s, d, path);
 }

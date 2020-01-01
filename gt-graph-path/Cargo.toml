@@ -1,6 +1,6 @@
 [package]
 name = "gt-graph-path"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Shogo Takata <pineapplehunter.daniel@gmail.com>"]
 edition = "2018"
 description = "discribe a path on a graph"

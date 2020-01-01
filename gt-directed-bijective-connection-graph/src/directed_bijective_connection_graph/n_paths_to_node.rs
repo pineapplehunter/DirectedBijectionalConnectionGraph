@@ -14,8 +14,8 @@ where
         let mut paths = Vec::with_capacity(n as usize);
 
         let mut direct_path = GraphPath::new_with_initial_size(self, 2);
-        direct_path.push_back(self.psi(n, d));
-        direct_path.push_back(d);
+        direct_path.push(self.psi(n, d));
+        direct_path.push(d);
         paths.push(direct_path);
 
         for i in 1..n {
@@ -23,9 +23,9 @@ where
             let dd = self.psi(i, d);
             let ddd = self.psi(n, dd);
 
-            p.push_back(ddd);
-            p.push_back(dd);
-            p.push_back(d);
+            p.push(ddd);
+            p.push(dd);
+            p.push(d);
 
             paths.push(p);
         }

@@ -17,12 +17,12 @@ where
         if d.len() == 1 {
             if d[0] == s {
                 let mut tmp = GraphPath::new(self);
-                tmp.push_back(s);
+                tmp.push(s);
                 return vec![tmp];
             } else {
                 let mut tmp = GraphPath::new(self);
-                tmp.push_back(s);
-                tmp.push_back(s ^ 1);
+                tmp.push(s);
+                tmp.push(s ^ 1);
                 return vec![tmp];
             }
         }
@@ -45,12 +45,8 @@ where
             let mut working_index = dim as usize - 1;
 
             for (index, path) in paths.iter().enumerate() {
-                if let Some(pos) = path
-                    .inner_path()
-                    .iter()
-                    .position(|&node| node == d[working_index])
-                {
-                    paths[index].inner_path_mut().truncate(pos);
+                if let Some(pos) = path.iter().position(|&node| node == d[working_index]) {
+                    paths[index].truncate(pos);
                     paths.swap(index, dim as usize - 1);
                     working_index = index;
                     break;
@@ -62,10 +58,8 @@ where
 
             let last_path = &mut paths[working_index];
             let tmp_path = self.single_path(phi_s, psi_d);
-            last_path
-                .inner_path_mut()
-                .extend(tmp_path.inner_path().iter());
-            last_path.push_back(d[working_index]);
+            last_path.extend(tmp_path.iter());
+            last_path.push(d[working_index]);
         } else {
             let mut same_ds = d
                 .iter()
@@ -88,7 +82,7 @@ where
                         new_d.push(dd);
                         tmp_paths.push({
                             let mut path = GraphPath::new(self);
-                            path.push_back(n);
+                            path.push(n);
                             path
                         });
                     } else {
@@ -100,8 +94,8 @@ where
                                 new_d.push(ddd);
                                 tmp_paths.push({
                                     let mut path = GraphPath::new(self);
-                                    path.push_back(dd);
-                                    path.push_back(n);
+                                    path.push(dd);
+                                    path.push(n);
                                     path
                                 });
                                 break;
@@ -122,22 +116,17 @@ where
 
             let mut path = GraphPath::new(self);
             let phi_s = self.phi(dim, s);
-            path.push_back(s);
+            path.push(s);
             let tmp_path = self.single_path(phi_s, dn);
-            path.inner_path_mut().extend(tmp_path.inner_path().iter());
+            path.extend(tmp_path.iter());
 
             //dbg!(&path);
 
-            'exit: for (index, node) in path.inner_path().iter().enumerate() {
+            'exit: for (index, node) in path.iter().enumerate() {
                 for (path_index, other_path) in tmp_paths.iter().enumerate() {
-                    if let Some(pos) = other_path
-                        .inner_path()
-                        .iter()
-                        .position(|other| node == other)
-                    {
-                        path.inner_path_mut().truncate(index);
-                        path.inner_path_mut()
-                            .extend(other_path.inner_path().iter().skip(pos));
+                    if let Some(pos) = other_path.iter().position(|other| node == other) {
+                        path.truncate(index);
+                        path.extend(other_path.iter().skip(pos));
                         working_index = path_index;
                         break 'exit;
                     }
@@ -156,11 +145,7 @@ where
             partial_paths
                 .iter_mut()
                 .zip(tmp_paths.iter())
-                .for_each(|(partial_path, path)| {
-                    partial_path
-                        .inner_path_mut()
-                        .extend(path.inner_path().iter())
-                });
+                .for_each(|(partial_path, path)| partial_path.extend(path.iter()));
             paths = partial_paths;
         }
 

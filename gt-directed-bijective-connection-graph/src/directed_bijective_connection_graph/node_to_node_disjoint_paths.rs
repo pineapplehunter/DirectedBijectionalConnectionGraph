@@ -27,42 +27,38 @@ where
         paths = node_to_node_disjoint_paths_helper(graph, n - 1, s, d);
 
         let mut path = GraphPath::new(graph);
-        path.push_back(s);
+        path.push(s);
         let phi_s = graph.phi(n, s);
         let tmp_path = graph.single_path(phi_s, graph.psi(n, d));
-        path.inner_path_mut().extend(tmp_path.inner_path().iter());
-        path.push_back(d);
+        path.extend(tmp_path.iter());
+        path.push(d);
 
         paths.push(path);
     } else {
         let mut path = GraphPath::new(graph);
-        path.push_back(s);
+        path.push(s);
         let phi_s = graph.phi(n, s);
         let tmp_path = graph.single_path(phi_s, d);
-        path.inner_path_mut().extend(tmp_path.inner_path().iter());
+        path.extend(tmp_path.iter());
 
-        let neighbor_node = path.inner_path()[path.inner_path().len() - 2];
+        let neighbor_node = path[path.len() - 2];
 
         let lemma1_except_neighbor = graph
             .n_paths_to_node(n, d)
             .into_iter()
-            .filter(|path| !path.inner_path().contains(&neighbor_node))
+            .filter(|path| !path.contains(&neighbor_node))
             .collect::<Vec<_>>();
 
         let ds = lemma1_except_neighbor
             .iter()
-            .map(|path| path.inner_path()[0])
+            .map(|path| path[0])
             .collect::<Vec<_>>();
 
         let mut partial_paths = graph.node_to_set_disjoint_paths(s, &ds);
         partial_paths
             .iter_mut()
             .zip(lemma1_except_neighbor.iter())
-            .for_each(|(partial, lemma1)| {
-                partial
-                    .inner_path_mut()
-                    .extend(lemma1.inner_path().iter().skip(1))
-            });
+            .for_each(|(partial, lemma1)| partial.extend(lemma1.iter().skip(1)));
 
         paths = partial_paths;
         paths.push(path);
